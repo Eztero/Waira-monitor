@@ -1,4 +1,10 @@
 # Waira-monitor
+*Relay mode*
+![ ](./images/monitor.jpg  "Relay mode")
+
+*Node mode*
+![ ](./images/monitor2.jpg  "Node mode")
+
 >Si hablas español lee el  [README_es](README_es.md) 
 
 It is a tool, created by Eztero operator of TricahuePool, to monitor the new Haskell nodes (cardano-node). It is written in c ++ and uses ncurses for its graphical interface, so it can be viewed on any device that uses a terminal.
