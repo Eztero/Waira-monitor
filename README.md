@@ -28,7 +28,7 @@ You must first install the dependencies required to compile Waira-monitor
 
     sudo apt install g ++ make libncurses-dev libcurl4-openssl-dev
 
-then download the most recent version from the reread tab, and unzip it in the directory you want, in that same directory you will now see a file called "make" and a folder called "src".
+then download the most recent version from the reread tab, and unzip it in the directory you want, in that same directory you will now see a file called "Makefile" and a folder called "src".
 Now in your terminal you must go to the directory where you unzipped the Waira-monitor and perform a make.
 
     make

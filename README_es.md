@@ -26,7 +26,7 @@ Primero deberás instalar las dependencias requeridas para compilar Waira-monito
 
 	sudo apt install g++ make libncurses-dev libcurl4-openssl-dev
 
-luego descarga la versión más reciente desde la pestaña reléase, y descomprímela en el directorio que desees, en ese mismo directorio ahora veras un archivo llamado "make" y una carpeta llamada "src”.
+luego descarga la versión más reciente desde la pestaña reléase, y descomprímela en el directorio que desees, en ese mismo directorio ahora veras un archivo llamado "Makefile" y una carpeta llamada "src”.
 Ahora en tu terminal deberás ir al directorio donde descomprimiste el Waira-monitor y realizar un make.
 
 	make
