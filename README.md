@@ -47,7 +47,7 @@ the configuration file "wairamonitor.conf" obeys these settings.
     "Prometheus_port": 12798
     }
    
-   * Directory_path: Corresponds to the path where your cardano-node and cardano-cli are located, for example "~ / Rele /" and is used to compare your node version with that of the Github repositories, if it is left blank, It will only show the latest version of the cardano-node from Github.
+   * Directory_path: Corresponds to the path where your cardano-node and cardano-cli are located, for example "~/Relay/" and is used to compare your node version with that of the Github repositories, if it is left blank, It will only show the latest version of the cardano-node from Github.
    * Name: It is the name that your monitor window will have.
    * Pool_id: It is the id of your pool and it is used to make the queries to adapools.org, if you leave it blank or simply delete this configuration, the queries will not be made.
    * Prometheus_port: Connect to your prometheus port of your cardano-node, by default it is always 12798.
