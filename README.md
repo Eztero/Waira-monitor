@@ -4,6 +4,7 @@
 
 
 *Node mode*
+
 ![ ](./images/monitor2.jpg  "Node mode")
 
 >Si hablas español lee el  [README_es](README_es.md) 
