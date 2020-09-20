@@ -4,6 +4,7 @@
 ![ ](./images/monitor.jpg  "Relay mode")
 
 *Modo Nodo*
+
 ![ ](./images/monitor2.jpg  "Node mode")
 
 Es una herramienta, creada por Eztero operador de TricahuePool, para monitorizar los nuevos nodos Haskell (cardano-node). Esta escrita en c++ y usa ncurses para su interfaz gráfico, por lo que se puede visualizar en cualquier dispositivo que use una terminal.
