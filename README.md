@@ -9,7 +9,7 @@
 
 >Si hablas español lee el  [README_es](README_es.md) 
 
-It is a tool, created by Eztero operator of TricahuePool, to monitor the new Haskell nodes (cardano-node). It is written in c ++ and uses ncurses for its graphical interface, so it can be viewed on any device that uses a terminal.
+It is a tool created to monitor the new Haskell nodes (cardano-node). It is written in c ++ and uses ncurses for its graphical interface, so it can be viewed on any device that uses a terminal.
 This monitor was born out of the need to have a dashboard without depending on external programs such as Grafana and thus can more easily access these statistical data with a light and simple interface.
 
 Among the features offered by this monitor are:

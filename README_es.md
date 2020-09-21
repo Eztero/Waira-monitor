@@ -7,7 +7,7 @@
 
 ![ ](./images/monitor2.jpg  "Node mode")
 
-Es una herramienta, creada por Eztero operador de TricahuePool, para monitorizar los nuevos nodos Haskell (cardano-node). Esta escrita en c++ y usa ncurses para su interfaz gráfico, por lo que se puede visualizar en cualquier dispositivo que use una terminal.
+Es una herramienta creada para monitorizar los nuevos nodos Haskell (cardano-node). Esta escrita en c++ y usa ncurses para su interfaz gráfico, por lo que se puede visualizar en cualquier dispositivo que use una terminal.
 Este monitor nació de la necesidad de tener un dashboard sin depender de programas externos como Grafana y así se pueda acceder más fácilmente a estos datos estadísticos con un interfaz liviano y simple.
 
 Dentro de las características que ofrece este monitor, están:
