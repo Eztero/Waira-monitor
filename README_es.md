@@ -52,12 +52,27 @@ el archivo de configuración "wairamonitor.conf" obedece a esta configuración.
     	"Pool_id": "",
     	"Prometheus_port": 12798
    	 }
-   	 
-   * Directory_path: Corresponde a la ruta donde se encuentra tu cardano-node y cardano-cli, por ejemplo "~/Rele/" y es usado para comparar tu versión de nodo con la de los repositorios de Github, si se deja en blanco, solo mostrara la última versión del cardano-node de Github.
-   * Name: Es el nombre que tendrá la ventana de tu monitor.
-   * Pool_id: Es la id de tu pool y se usa para realizar las consultas a adapools.org, si lo dejas en blanco o simplemente borras esta configuración, las consultas no se realizarán.
-   * Prometheus_port: Conecta a tu puerto prometheus de tu cardano-node, por defecto siempre es el 12798.
-   
+
+* Directory_path: Corresponde a la ruta donde se encuentra tu cardano-node y cardano-cli, por ejemplo "~/Rele/" y es usado para comparar tu versión de nodo con la de los repositorios de Github, si se deja en blanco, solo mostrara la última versión del cardano-node de Github.
+* Name: Es el nombre que tendrá la ventana de tu monitor.
+* Pool_id: Es la id de tu pool y se usa para realizar las consultas a adapools.org, si lo dejas en blanco o simplemente borras esta configuración, las consultas no se realizarán.
+* Prometheus_port: Conecta a tu puerto prometheus de tu cardano-node, por defecto siempre es el 12798.
+
+En el archivo de configuración de tu nodo "mainnet-config.json" deberás establecer en "true" el "TraceBlockFetchDecisions" de esta manera podrás visualizar la estadística de los peer.
+
+	"TraceBlockFetchDecisions": true,
+
+En ese mismo archivo de configuración más abajo podrás ver las configuraciones de los puerto Prometheus y EKG.
+
+	"hasEKG": 12788,
+	"hasPrometheus": [
+	"127.0.0.1",
+	12798
+	],
+
+Como puedes ver el puerto para Prometheus en este ejemplo, se encuentra corriendo por defecto en el 12798.
+
+
 ## Ejecución
 Una vez configurado tu archivo de configuración, puedes dejar tu ejecutable junto con su archivo de configuración donde desees, luego para ejecutarlo debes tener tu terminal en la misma ruta de tu ejecutable y hacer un:
 

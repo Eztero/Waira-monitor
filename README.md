@@ -60,6 +60,21 @@ the configuration file "wairamonitor.conf" obeys these settings.
    * Pool_id: It is the id of your pool and it is used to make the queries to adapools.org, if you leave it blank or simply delete this configuration, the queries will not be made.
    * Prometheus_port: Connect to your prometheus port of your cardano-node, by default it is always 12798.
    
+In the configuration file of your node "mainnet-config.json" you must set the "TraceBlockFetchDecisions" to "true" in this way you can view the statistics of the peers.
+
+	"TraceBlockFetchDecisions": true,
+
+In that same configuration file you will see the Prometheus and EKG port configurations.
+
+	"hasEKG": 12788,
+	"hasPrometheus": [
+	"127.0.0.1",
+	12798
+	],
+
+As you can see the port for Prometheus in this example, it is running by default on 12798.
+
+
 ## Execution
 Once your configuration file is configured, you can leave your executable together with its configuration file wherever you want, then to run it you must have your terminal in the same path as your executable and do a:
 
