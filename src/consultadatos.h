@@ -53,7 +53,8 @@ class consultadatos{
 	bool cargar_configuracion(ngui *ventana, const double ventanapos_xyanchoalto[]); //carga los datos dentro de la ventana creada
 	bool github(std::string *nversion, std::string *estado); //consulta el repo de github cardano-node por la version y el estado 
 	bool version_nodo(std::string *nversion);
-	
+	bool github_habilitado();
+	bool adapools_habilitado();
 	
 	private:   
 	float saturated, density;
@@ -85,7 +86,7 @@ class consultadatos{
     uint64_t datoscli[TAMANO_ARRAY_DATOS], uint64buff,reward_balance;
     uint32_t uint32buff;
 	uint16_t posicion,port_node,cantidad_ip_in=0;
-	bool haypuertorelay, haypuertonode;
+	bool haypuertorelay, haypuertonode, enable_github,enable_adapools;
     std::string linea,buff,respuesta_url,ip_in[100],puerto_in[100],ips_out[100],puertos_out[100],poolname,url_socket,url_cardanonode,stakeaddress,pool_id,active_stake,total_stake,pledged,delegators,buff_error, density_str;
     CURL *curl;                        //parametros de configiracion curl
     CURLcode res; 

@@ -13,6 +13,8 @@ consultadatos::consultadatos(){
     reward_balance=0;
     stakeaddress="";
     pool_id="";
+    enable_github=false;
+    enable_adapools=false;
 }
 
 size_t consultadatos::WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) //funcion para curl
@@ -53,6 +55,13 @@ std::string consultadatos::poolnamew(){
 }
 
 //---------------------
+
+bool consultadatos::github_habilitado(){
+	return enable_github;
+	}
+bool consultadatos::adapools_habilitado(){
+	return enable_adapools;
+	}
 
 bool consultadatos::actualizar_adapools(){
     if(pool_id==""){return false;}
@@ -477,28 +486,38 @@ bool consultadatos::cargar_configuracion(ngui *ventana, const double ventanapos_
         ventana->refrescar();
         usleep(100000);
         q_estado = rconfig.find("Prometheus_port");  
-        if(q_estado != rconfig.end()){port_node=*q_estado;if(port_node>1){haypuertonode=true;ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+5,"* The prometheus \"node\" port found",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+5,"* The prometheus \"node\" port is not valid number",COLOR_PAIR(1));haypuertonode=false;}}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+5,"* Prometheus port of \"node\" not found",COLOR_PAIR(1));haypuertonode=false;}
+        if(q_estado != rconfig.end()){port_node=*q_estado;if(port_node>1){haypuertonode=true;ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+4,"* The prometheus \"node\" port found",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+4,"* The prometheus \"node\" port is not valid number",COLOR_PAIR(1));haypuertonode=false;}}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+4,"* Prometheus port of \"node\" not found",COLOR_PAIR(1));haypuertonode=false;}
         ventana->refrescar();
         usleep(100000);
         q_estado = rconfig.find("Directory_path"); 
-        if(q_estado != rconfig.end()){url_cardanonode=*q_estado;if(url_cardanonode!=""){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+6,"* Path to cardano-node and cardano-cli found",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+6,"* Path to cardano-node and cardano-cli is empty",COLOR_PAIR(3));}}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+6,"* Path to cardano-node and cardano-cli not found",COLOR_PAIR(3));}
+        if(q_estado != rconfig.end()){url_cardanonode=*q_estado;if(url_cardanonode!=""){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+5,"* Path to cardano-node and cardano-cli found",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+5,"* Path to cardano-node and cardano-cli is empty",COLOR_PAIR(3));}}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+5,"* Path to cardano-node and cardano-cli not found",COLOR_PAIR(3));}
         ventana->refrescar();
         usleep(100000);
         q_estado = rconfig.find("Socket_path"); 
-        if(q_estado != rconfig.end()){url_socket=*q_estado;if(url_socket!=""){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+7,"* Path to soket.node found",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+7,"* Path to soket.node is empty",COLOR_PAIR(3));}}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+7,"* Path to soket.node not found",COLOR_PAIR(3));}
+        if(q_estado != rconfig.end()){url_socket=*q_estado;if(url_socket!=""){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+6,"* Path to soket.node found",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+6,"* Path to soket.node is empty",COLOR_PAIR(3));}}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+6,"* Path to soket.node not found",COLOR_PAIR(3));}
         ventana->refrescar();
         usleep(100000);
         q_estado = rconfig.find("Pool_id"); 
-        if(q_estado != rconfig.end()){pool_id=*q_estado;if(pool_id!=""){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+8,"* Pool id found",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+8,"* Pool Id is empty",COLOR_PAIR(3));}}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+8,"* Pool Id not found",COLOR_PAIR(3));}
+        if(q_estado != rconfig.end()){pool_id=*q_estado;if(pool_id!=""){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+7,"* Pool id found",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+7,"* Pool Id is empty",COLOR_PAIR(3));}}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+7,"* Pool Id not found",COLOR_PAIR(3));}
         ventana->refrescar();
         usleep(100000);
         q_estado = rconfig.find("Stake_address"); 
-        if(q_estado != rconfig.end()){stakeaddress=*q_estado;if(pool_id!=""){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+9,"* Stake address found",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+9,"* Stake address is empty",COLOR_PAIR(3));}}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+9,"* Stake address not found",COLOR_PAIR(3));}
-        ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+10,"* Configuration Loaded",COLOR_PAIR(4) | A_BOLD);
+        if(q_estado != rconfig.end()){stakeaddress=*q_estado;if(pool_id!=""){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+8,"* Stake address found",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+8,"* Stake address is empty",COLOR_PAIR(3));}}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+8,"* Stake address not found",COLOR_PAIR(3));}
+        ventana->refrescar();
+        usleep(100000);
+        q_estado = rconfig.find("Query_github"); 
+        if(q_estado != rconfig.end()){enable_github=*q_estado;if(enable_github){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+9,"* Queries to Github are enable",COLOR_PAIR(3));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+9,"* Queries to Github are disable",COLOR_PAIR(3));}}else{enable_github=false;ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+9,"* Queries to Github are disable",COLOR_PAIR(3));}
+        ventana->refrescar();
+        usleep(100000);
+        q_estado = rconfig.find("Query_adapools"); 
+        if(q_estado != rconfig.end()){enable_adapools=*q_estado;if(enable_adapools){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+10,"* Queries to Adapools are enable",COLOR_PAIR(3));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+10,"* Queries to Adapools are disable",COLOR_PAIR(3));}}else{enable_adapools=false;ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+10,"* Queries to Adapools are disable",COLOR_PAIR(3));}
+        usleep(100000);
+        ventana->refrescar();
+        ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+11,"* Configuration Loaded",COLOR_PAIR(4) | A_BOLD);
         ventana->refrescar();
         usleep(100000);
         if(!haypuertonode){
-            ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+11,"* Have not Prometheus ports",COLOR_PAIR(1) | A_BOLD | A_BLINK);
+            ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+12,"* Have not Prometheus ports",COLOR_PAIR(1) | A_BOLD | A_BLINK);
             ventana->refrescar();
             return false;
         }else if(!haynombre){
@@ -517,6 +536,8 @@ bool consultadatos::cargar_configuracion(ngui *ventana, const double ventanapos_
         ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+3,"* Creating configuration file ...",COLOR_PAIR(4));
         json wconfig;
         wconfig = {
+			{"Query_github", false},
+			{"Query_adapools",false},
             {"Name","MyPoolName"},
             {"Prometheus_port",12798},
             {"Directory_path",""},
