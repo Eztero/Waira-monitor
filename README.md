@@ -52,13 +52,17 @@ the configuration file "wairamonitor.conf" obeys these settings.
     "Directory_path": "",
     "Name": "MyPoolName",
     "Pool_id": "",
-    "Prometheus_port": 12798
+    "Prometheus_port": 12798,
+    "Query_github":false,
+    "Query_adapools":false
     }
    
-   * Directory_path: Corresponds to the path where your cardano-node and cardano-cli are located, for example "~/Relay/" and is used to compare your node version with that of the Github repositories, if it is left blank, It will only show the latest version of the cardano-node from Github.
-   * Name: It is the name that your monitor window will have.
-   * Pool_id: It is the id of your pool and it is used to make the queries to adapools.org, if you leave it blank or simply delete this configuration, the queries will not be made.
-   * Prometheus_port: Connect to your prometheus port of your cardano-node, by default it is always 12798.
+* Directory_path: Corresponds to the path where your cardano-node and cardano-cli are located, for example "~/Relay/" and is used to compare your node version with that of the Github repositories, if it is left blank, It will only show the latest version of the cardano-node from Github.
+* Name: It is the name that your monitor window will have.
+* Pool_id: It is the id of your pool and it is used to make the queries to adapools.org, if you leave it blank or simply delete this configuration, the queries will not be made.
+* Prometheus_port: Connect to your prometheus port of your cardano-node, by default it is always 12798.
+* Query_github: Enable (true) or disable (false) queries to Github.
+* Query_adapools: Enables (true) or disables (false) queries to adapools.org.
    
 In the configuration file of your node "mainnet-config.json" you must set the "TraceBlockFetchDecisions" to "true" in this way you can view the statistics of the peers.
 
