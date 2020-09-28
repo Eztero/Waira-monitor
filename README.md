@@ -24,16 +24,20 @@ Among the features offered by this monitor are:
 
 ## Compilation
 
-You must first install the dependencies required to compile Waira-monitor
+You must first install the dependencies required to compile Waira-monitor.
 
     sudo apt install g++ make libncurses-dev libcurl4-openssl-dev
+
+On some linux systems it gives an error when compiling ncursesw, in that case you must install this dependency.
+
+    sudo apt install libncursesw5-dev
 
 then download the most recent version from the reread tab, and unzip it in the directory you want, in that same directory you will now see a file called "Makefile" and a folder called "src".
 Now in your terminal you must go to the directory where you unzipped the Waira-monitor and perform a make.
 
     make
 
-This will generate a file called "wairamonitor"
+This will generate a file called "wairamonitor".
 
 you can run with:
 
