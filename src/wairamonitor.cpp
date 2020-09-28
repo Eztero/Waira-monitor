@@ -13,7 +13,7 @@ GPL-3.0 License
 #include "ngui.h"
 #include <unistd.h>
 #include <csignal>
-#define VERSION_WAIRA "wairamonitor 0.1"
+#define VERSION_WAIRA "wairamonitor 0.2"
 
 void salidaforzosa(int a);
 void senalsalida(int a);
