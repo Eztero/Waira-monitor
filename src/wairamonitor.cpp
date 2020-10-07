@@ -13,8 +13,10 @@ GPL-3.0 License
 #include "ngui.h"
 #include <unistd.h>
 #include <csignal>
-#define VERSION_WAIRA "wairamonitor 0.2"
+#include "lectura_red.h"
+#define VERSION_WAIRA "wairamonitor 0.3"
 
+void categorizar_ips(std::string puertos_abiertos[], uint16_t *index_puertosabiertos,std::string ip_p2p[][2], uint16_t *index_ip_p2p,std::string ip_huerfana_salida[][2], uint16_t *index_ip_huerfana_salida,std::string ip_huerfana_entrada[][2], uint16_t *index_ip_huerfana_entrada);
 void salidaforzosa(int a);
 void senalsalida(int a);
 void tiempo_restantes_slot(const uint32_t slot_actual, uint16_t *dia,uint16_t *hora,uint16_t *min,uint16_t *seg);
@@ -34,7 +36,6 @@ int main(){
     ventana->paleta_color(3,COLOR_YELLOW,COLOR_BLACK);
     ventana->paleta_color(4,COLOR_GREEN,COLOR_BLACK);
     ventana->paleta_color(6,COLOR_WHITE,COLOR_RED);
-    
     
     ventana->refrescar();
     
@@ -70,6 +71,23 @@ int main(){
 }
 
 void cargar_ui(){
+	 //---Array de datos para TCP
+    std::string tcp_dec[540][5];
+    std::string ip_p2p[100][2]; //[index][ip,puerto_local]
+    std::string puerto_escucha[50];
+    std::string ip_huerfana_salida[100][2]; 
+    std::string ip_huerfana_entrada[100][2];
+    //---index para TCP---------
+    uint16_t index_puerto_escucha;
+    uint16_t index_ip_p2p;
+    uint16_t index_ip_huerfana_salida;
+    uint16_t index_ip_huerfana_entrada;
+    //---buffer para post borrado para TCP---
+    uint16_t buff_index_ip_huerfana_entrada=0;
+    uint16_t buff_index_ip_huerfana_salida=0;
+    uint16_t buff_index_ip_p2p=0;
+    uint16_t buff_index_puerto_escucha=0;
+    
     enum strlength{
         epoca, 
         slot_epoca,
@@ -106,7 +124,7 @@ void cargar_ui(){
     double pos_x=COLS*0.25;
     //double pos_y=LINES*0.3;
     double pos_ancho, pos_ancho2,pos_ancho3 ;//pos_alto;
-    
+    //---Ventana de Loading Data---
     ventana->label(2,2,"Loading Data ",A_BOLD); //ventana carga slider
     ventana->slider_horizontal(15,2,10,5,0); //ventana carga slider
     ventana->refrescar();
@@ -127,7 +145,6 @@ void cargar_ui(){
     if(consulta->version_nodo(&nversion)){acceso_versionnodo=true;}else{acceso_versionnodo=false;}
     ventana->slider_horizontal(15,2,10,5,5); //ventana carga slider
     ventana->refrescar();
-    
     //Se borra el "Loading"
     mvhline(2,2,' ',COLS/2);
     
@@ -164,12 +181,18 @@ void cargar_ui(){
     
     double ventana_blockchain[4]={(3+pos_ancho),14,pos_ancho3,3};  //Dimensiones para la ventana de blockchain
     
+    //---Dimenciones de las ventanas TCP-----------
+    double alto=LINES-4;
+    double ventana_puertos_abiertos[4]={1,1,20,alto};
+    double ventana_interconectados[4]={22,1,25,alto};
+    double ventana_huerfano_entrada[4]={51,1,25,alto};
+    double ventana_huerfano_salida[4]={77,1,25,alto};
+    
     if(consulta->kes_actual()==0){
         ventana->crear_subventana(ventana_estadisticapool_node[0],ventana_estadisticapool_node[1],ventana_estadisticapool_node[2],ventana_estadisticapool_node[3],"Relay");
     }else{
         ventana->crear_subventana(ventana_estadisticapool_node[0],ventana_estadisticapool_node[1],ventana_estadisticapool_node[2],ventana_estadisticapool_node[3],"Producer");
     }
-    
     //Se crean las ventanas
     ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
     ventana->crear_subventana(ventana_memoria[0],ventana_memoria[1],ventana_memoria[2],ventana_memoria[3],"Memory");
@@ -313,8 +336,23 @@ void cargar_ui(){
             ventana_blockchain[2]=pos_ancho3;
             ventana_blockchain[3]=3;
             
-            ventana->crear_ventantaprincipal(consulta->poolnamew(),A_BOLD,VERSION_WAIRA,A_BOLD);
+                //---Dimenciones de las ventanas TCP-----------
+			double alto=LINES-4;
+			ventana_puertos_abiertos[3]=alto;
+			ventana_interconectados[3]=alto;
+			ventana_huerfano_entrada[3]=alto;
+			ventana_huerfano_salida[3]=alto;
+
+			ventana->crear_ventantaprincipal(consulta->poolnamew(),A_BOLD,VERSION_WAIRA,A_BOLD);
             ventana->label(1,LINES-2,"Press \"q\" for Quit, \"ESC\" for Main ,\"p\" for Peer,\"a\" for About");
+            if(switchpeer==true && switchabout==false && switchmain==false){
+			    //---Crea las ventanas
+			ventana->crear_subventana(ventana_interconectados[0],ventana_interconectados[1],ventana_interconectados[2],ventana_interconectados[3],"Interconected \u2B81","TCP established"); 
+			ventana->crear_subventana(ventana_huerfano_entrada[0],ventana_huerfano_entrada[1],ventana_huerfano_entrada[2],ventana_huerfano_entrada[3],"Lonely input \u2B63","TCP established"); 
+			ventana->crear_subventana(ventana_huerfano_salida[0],ventana_huerfano_salida[1],ventana_huerfano_salida[2],ventana_huerfano_salida[3],"Lonely output \u2B61","TCP established"); 
+			ventana->crear_subventana(ventana_puertos_abiertos[0],ventana_puertos_abiertos[1],ventana_puertos_abiertos[2],ventana_puertos_abiertos[3],"Listen port \u2B26","All TCP ports"); 	
+				}
+            if(switchpeer==false && switchabout==false && switchmain==true){
             if(consulta->kes_actual()==0){
                 ventana->crear_subventana(ventana_estadisticapool_node[0],ventana_estadisticapool_node[1],ventana_estadisticapool_node[2],ventana_estadisticapool_node[3],"Relay");
             }else{
@@ -400,12 +438,12 @@ void cargar_ui(){
                     ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Can't be accessed to Adapools");
                 }
             }
-            
-            ktecla=0;
-            switchmain=true;
-            switchpeer=false;
-            switchabout=false;
+            //switchmain=true;
+            //switchpeer=false;
+            //switchabout=false;
             ventana->refrescar();
+		}
+		ktecla=0;
         };break;
         case 27:{  //tecla esc
             if(switchmain==false &&(switchpeer=true || switchabout==true)){
@@ -500,14 +538,12 @@ void cargar_ui(){
                         ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Can't be accessed to Adapools");
                     }
                 }
-                ktecla=0;
                 switchmain=true;
                 switchpeer=false;
                 switchabout=false;
                 ventana->refrescar();            
-            }else{
-                ktecla=0;
             }
+            ktecla=0;
         };break;
         case 97:{ //tecla a
             if(switchabout==false && (switchmain==true || switchpeer==true)){
@@ -531,14 +567,17 @@ void cargar_ui(){
                 ventana->refrescar();
                 ventana->crear_ventantaprincipal(consulta->poolnamew(),A_BOLD,VERSION_WAIRA,A_BOLD);
                 ventana->label(1,LINES-2,"Press \"q\" for Quit, \"ESC\" for Main ,\"p\" for Peer,\"a\" for About");
-                ventana->label((COLS/2)-9,(LINES/2)-3,"In a future release ");
-                ventana->label((COLS/2)-9,(LINES/2)-2,"this page will show your ");
-                ventana->label((COLS/2)-9,(LINES/2)-1,"node's peer connection");
+				//---Crea las ventanas
+				ventana->crear_subventana(ventana_interconectados[0],ventana_interconectados[1],ventana_interconectados[2],ventana_interconectados[3],"Interconected \u2B81","TCP established"); 
+				ventana->crear_subventana(ventana_huerfano_entrada[0],ventana_huerfano_entrada[1],ventana_huerfano_entrada[2],ventana_huerfano_entrada[3],"Lonely input \u2B63","TCP established"); 
+				ventana->crear_subventana(ventana_huerfano_salida[0],ventana_huerfano_salida[1],ventana_huerfano_salida[2],ventana_huerfano_salida[3],"Lonely output \u2B61","TCP established"); 
+				ventana->crear_subventana(ventana_puertos_abiertos[0],ventana_puertos_abiertos[1],ventana_puertos_abiertos[2],ventana_puertos_abiertos[3],"Listen port \u2B26","All TCP ports"); 
                 switchpeer=true;
                 switchmain=false;
                 switchabout=false;
                 ventana->refrescar();
             }
+				ktecla=0;
         };break;
         default:{
             if(switchmain){
@@ -591,8 +630,6 @@ void cargar_ui(){
                         
                     }else{
                         ventana->label((ventana_estadisticapool_node[0]+ventana_estadisticapool_node[2]*0.5-13),ventana_estadisticapool_node[1]+11,"-No information about KES-", A_UNDERLINE | A_BOLD);
-                        
-                        
                     }
                     
                     
@@ -765,6 +802,43 @@ void cargar_ui(){
                 ventana->refrescar();
                 
             }
+            else if(switchpeer){
+				    //---Consulta los datos locales TCP
+    categorizar_ips(&puerto_escucha[0],&index_puerto_escucha,&ip_p2p[0],&index_ip_p2p,&ip_huerfana_salida[0],&index_ip_huerfana_salida,&ip_huerfana_entrada[0],&index_ip_huerfana_entrada);
+
+	//---Imprime los datos en sus respectivas ventanas
+	uint16_t numero_maximo_filas=LINES-5;
+	
+	ventana->borrar_subventana(ventana_interconectados[0]+1,ventana_interconectados[1]+1,23,buff_index_ip_p2p-1);
+    if(index_ip_p2p>numero_maximo_filas){index_ip_p2p=numero_maximo_filas;}
+    for(uint16_t a=0;a<index_ip_p2p;a++){
+    mvprintw(ventana_interconectados[1]+(a+1),ventana_interconectados[0]+1,"%s : %s",ip_p2p[a][0].c_str(),ip_p2p[a][1].c_str());
+	}
+	buff_index_ip_p2p=index_ip_p2p;
+	
+	ventana->borrar_subventana(ventana_huerfano_entrada[0]+1,ventana_huerfano_entrada[1]+1,23,buff_index_ip_huerfana_entrada-1);
+	if(index_ip_huerfana_entrada>numero_maximo_filas){index_ip_huerfana_entrada=numero_maximo_filas;}
+	for(uint16_t a=0;a<index_ip_huerfana_entrada;a++){
+    mvprintw(ventana_huerfano_entrada[1]+(a+1),ventana_huerfano_entrada[0]+1,"%s : %s",ip_huerfana_entrada[a][0].c_str(),ip_huerfana_entrada[a][1].c_str());
+	}
+	buff_index_ip_huerfana_entrada=index_ip_huerfana_entrada;
+	
+	ventana->borrar_subventana(ventana_huerfano_salida[0]+1,ventana_huerfano_salida[1]+1,23,buff_index_ip_huerfana_salida-1);
+	if(index_ip_huerfana_salida>numero_maximo_filas){index_ip_huerfana_salida=numero_maximo_filas;}
+	for(uint16_t a=0;a<index_ip_huerfana_salida;a++){
+    mvprintw(ventana_huerfano_salida[1]+(a+1),ventana_huerfano_salida[0]+1,"%s : %s",ip_huerfana_salida[a][0].c_str(),ip_huerfana_salida[a][1].c_str());
+	}
+	buff_index_ip_huerfana_salida=index_ip_huerfana_salida;
+	
+	ventana->borrar_subventana(ventana_puertos_abiertos[0]+1,ventana_puertos_abiertos[1]+1,18,buff_index_puerto_escucha-1);
+	if(index_puerto_escucha>numero_maximo_filas){index_puerto_escucha=numero_maximo_filas;}
+	for(uint16_t a=0;a<index_puerto_escucha;a++){
+    mvprintw(ventana_puertos_abiertos[1]+(a+1),ventana_puertos_abiertos[0]+1,"%s",puerto_escucha[a].c_str());
+	}
+	buff_index_puerto_escucha=index_puerto_escucha;
+	//---Refresca la pantalla
+	ventana->refrescar();
+				}
         };break;
         }
         conteo_nodo++;
@@ -788,11 +862,132 @@ void cargar_ui(){
             }
             conteo_adapools=0;
         }
-        sleep(1);
+        sleep(1); //medio seg el refresco
     }
     
 }
 
+void categorizar_ips(std::string puertos_abiertos[], uint16_t *index_puertosabiertos,std::string ip_p2p[][2], uint16_t *index_ip_p2p,std::string ip_huerfana_salida[][2], uint16_t *index_ip_huerfana_salida,std::string ip_huerfana_entrada[][2], uint16_t *index_ip_huerfana_entrada){
+    lectura_red lectura;
+    *index_ip_p2p=0;
+    *index_ip_huerfana_salida=0;
+    *index_ip_huerfana_entrada=0;
+    *index_puertosabiertos=0;
+    std::string tcp_dec[540][5];
+    std::string pe1[540][2]; //string[index][ip,puerto_local]
+    std::string pe2[540][2]; //string[index][ip,puerto_local]
+    std::string ps[540][3]; //string[index][ip,puerto_local,puerto_remoto]
+    uint16_t index_pe1=0;
+    uint16_t index_pe2=0;
+    uint16_t index_ps=0;
+    uint16_t todos=0;
+    lectura.puerto_tcp(&todos,&tcp_dec[0]);
+    for(uint16_t a=0; a<(lectura.cantidad_ips());a++){ //se determinan los puertos abiertos y se guardan en puertos_abiertos[]
+        if(tcp_dec[a][4]=="10"){
+            puertos_abiertos[*index_puertosabiertos]=tcp_dec[a][1];
+            *index_puertosabiertos+=1;
+            
+        }	
+    }
+    for(uint16_t a=0;a<*index_puertosabiertos;a++){ //se buscan las ips de entrada ligadas a los puertos abiertos y se almacenan en pe1[][] y pe2[][]
+        for(uint16_t b=0; b<(lectura.cantidad_ips());b++){
+            if(tcp_dec[b][4]=="1"){
+                if(tcp_dec[b][1]==puertos_abiertos[a]){ //ese puerto abierto es igual al puerto tcp_dec[][]
+                    pe1[index_pe1][0]=tcp_dec[b][2]; //se guarda esa ip en pe1
+                    pe1[index_pe1][1]=tcp_dec[b][1]; //se guarda ese puerto en pe1
+                    pe2[index_pe1][0]=tcp_dec[b][2]; //se guarda esa ip en pe2
+                    pe2[index_pe1][1]=tcp_dec[b][1]; //se guarda ese puerto en pe2
+                    index_pe1++;
+                }
+            }
+        }
+    }
+    index_pe2=index_pe1;
+    for(uint16_t a=0; a<(lectura.cantidad_ips());a++){ //se determinan las ip ESTABLISHED y se guardan en ps[][]
+        if(tcp_dec[a][4]=="1"){
+            ps[index_ps][0]=tcp_dec[a][2]; //se guarda esa ip en ps
+            ps[index_ps][1]=tcp_dec[a][1]; //se guarda ese puerto local en ps
+            ps[index_ps][2]=tcp_dec[a][3]; //se guarda ese puerto remoto en ps
+            index_ps++;
+        }	
+    }
+    for(uint16_t a=0;a<*index_puertosabiertos;a++){ //a ps[][] se le quitan los puertos_abiertos[] con un "" 
+		for(uint16_t b=0;b<index_ps;b++){
+			if(puertos_abiertos[a]==ps[b][1]){ //se comparan sus puertos
+				ps[b][0]="";
+				ps[b][1]="";
+				ps[b][2]="";
+				}
+			}
+		}
+	for(uint16_t a=0;a<index_pe2;a++){ //a pe2[][] se dejan en "" las ips que coinciden con de ps[][]
+		for(uint16_t b=0;b<index_ps;b++){
+			if(pe2[a][0]==ps[b][0]){ // se comparan sus ips
+				pe2[a][0]="";
+				pe2[a][1]="";
+				}
+			}
+		}
+	for(uint16_t a=0;a<index_pe2;a++){ //se pasa pe2[][] a ip_huerfana_entrada[][]
+		if(pe2[a][0]!=""){
+			ip_huerfana_entrada[*index_ip_huerfana_entrada][0]=pe2[a][0];
+			ip_huerfana_entrada[*index_ip_huerfana_entrada][1]=pe2[a][1];
+			*index_ip_huerfana_entrada+=1;
+			}
+		}
+	
+	for(uint16_t a=0;a<index_pe1;a++){ //a ps[][] se dejan en "" las ips que coinciden con de pe1[][]
+		for(uint16_t b=0;b<index_ps;b++){
+			if(pe1[a][0]==ps[b][0]){ // se comparan sus ips
+				ps[b][0]="";
+				ps[b][1]="";
+				ps[b][2]="";
+				}
+			}
+		}
+	for(uint16_t a=0;a<index_ps;a++){ //se pasa ps[][] a ip_huerfana_salida[][]
+		if(ps[a][0]!=""){
+			ip_huerfana_salida[*index_ip_huerfana_salida][0]=ps[a][0];
+			ip_huerfana_salida[*index_ip_huerfana_salida][1]=ps[a][2];
+			*index_ip_huerfana_salida+=1;
+			}
+		}
+		
+	for(uint16_t a=0;a<index_pe1;a++){ //a pe1[][] se dejan en "" las ips que coinciden con ip_huerfana_entrada[][]
+		for(uint16_t b=0;b<*index_ip_huerfana_entrada;b++){
+			if(pe1[a][0]==ip_huerfana_entrada[b][0]){ // se comparan sus ips
+				pe1[a][0]="";
+				pe1[a][1]="";
+				}
+			}
+		}
+
+	std::string buf_unaip;
+	bool bool_unaip=true;
+	for(uint16_t a=0;a<index_pe1;a++){ //se borran las ips repetidas en pe1[][]
+		if(pe1[a][0]!=""){
+		buf_unaip=pe1[a][0];
+		bool_unaip=true;
+		for(uint16_t b=0;b<index_pe1;b++){
+			if(buf_unaip==pe1[b][0] && bool_unaip){
+				bool_unaip=false;
+				}
+			else if(buf_unaip==pe1[b][0]){
+				pe1[b][0]="";
+				}
+			}
+		}
+	}
+	
+	for(uint16_t a=0;a<index_pe1;a++){ //se pasa pe1[][] a ip_p2p[][]
+		if(pe1[a][0]!=""){
+			ip_p2p[*index_ip_p2p][0]=pe1[a][0];
+			ip_p2p[*index_ip_p2p][1]=pe1[a][1];
+			*index_ip_p2p+=1;
+			}
+		}
+
+}
 
 void tiempo_restantes_slot(const uint32_t slot_actual, uint16_t *dia,uint16_t *hora,uint16_t *min,uint16_t *seg){
     uint32_t slot_restantes=EPOCHLENGTH-slot_actual;

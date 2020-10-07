@@ -18,7 +18,6 @@ Dentro de las características que ofrece este monitor, están:
 
 * Muestras las estadísticas básicas de tu nodo en funcionamiento, por ejemplo, el KES y así no olvides renovar tus llaves. 
 
-> Tengo pendiente en la próxima versión agregar la opción para visualizar los peers y las conexiones de red
 
 ## Compilación
 

@@ -23,8 +23,7 @@ size_t consultadatos::WriteCallback(void *contents, size_t size, size_t nmemb, v
     return size * nmemb;
 };
 
-void consultadatos::clean_array(uint64_t datoscli[]) //borra los arrays
-{
+void consultadatos::clean_array(uint64_t datoscli[]){ //borra los arrays
     for(int a=0;a<TAMANO_ARRAY_DATOS;a++){
         datoscli[a]=0;
     }
@@ -49,7 +48,6 @@ void consultadatos::clean_array(uint64_t datoscli[]) //borra los arrays
 //    
 //}
 
-
 std::string consultadatos::poolnamew(){
     return poolname;
 }
@@ -59,6 +57,7 @@ std::string consultadatos::poolnamew(){
 bool consultadatos::github_habilitado(){
 	return enable_github;
 	}
+
 bool consultadatos::adapools_habilitado(){
 	return enable_adapools;
 	}
@@ -353,60 +352,76 @@ bool consultadatos::cargar_datosreward(){
 uint32_t consultadatos::epoca(){
     return datoscli[cardano_node_ChainDB_metrics_epoch_int];
 }
+
 uint32_t consultadatos::slot_epoca(){
     return datoscli[cardano_node_ChainDB_metrics_slotInEpoch_int];
 }
+
 uint64_t consultadatos::totalslot(){
     return datoscli[cardano_node_ChainDB_metrics_slotNum_int];
 }
+
 uint32_t consultadatos::kes_actual(){
     return datoscli[cardano_node_Forge_metrics_currentKESPeriod_int];
 }
+
 uint32_t consultadatos::kes_restante(){
     return datoscli[cardano_node_Forge_metrics_remainingKESPeriods_int];
 }
+
 uint32_t consultadatos::kes_certificado(){
     return datoscli[cardano_node_Forge_metrics_operationalCertificateStartKESPeriod_int];
 }
+
 uint32_t consultadatos::kes_termino_certificado(){
     return datoscli[cardano_node_Forge_metrics_operationalCertificateExpiryKESPeriod_int];
 }
+
 uint32_t consultadatos::puerto_nodo(){
     return port_node;
 }
+
 uint16_t consultadatos::saturacion(){
     uint32buff=saturated*100;
     return uint32buff;
 }
+
 uint32_t consultadatos::delegadores(){
     uint32buff=std::stoi(delegators);
     return uint32buff;
 }
+
 uint64_t consultadatos::pledge(){
     uint64buff=std::stof(pledged);
     uint64buff=uint64buff/1000000;
     return uint64buff;
 }
+
 uint64_t consultadatos::stake_total(){
     uint64buff=std::stof(total_stake);
     uint64buff=uint64buff/1000000;
     return uint64buff;
 }
+
 uint64_t consultadatos::stake_activo(){
     uint64buff=std::stof(active_stake);
     uint64buff=uint64buff/1000000;
     return uint64buff;
 }
+
 uint32_t consultadatos::memoria(){
     uint32buff=(datoscli[cardano_node_metrics_Stat_rss_int]*4096)/(1048576);
     return uint32buff;	
 }
+
 uint64_t consultadatos::transacciones_procesadas(){
     return datoscli[cardano_node_metrics_txsProcessedNum_int];
 }
+
 uint32_t consultadatos::transacciones_mempool(){
     return datoscli[cardano_node_metrics_txsInMempool_int];
 }
+
 uint64_t consultadatos::numero_bloque(){
 	return datoscli[cardano_node_ChainDB_metrics_blockNum_int];
 	}
@@ -441,6 +456,7 @@ uint32_t consultadatos::forks(){
 uint32_t consultadatos::bloques_creados(){
 	return datoscli[cardano_node_metrics_Forge_forged_int];
 	}
+
 uint32_t consultadatos::bloques_asignados(){
 	return datoscli[cardano_node_metrics_Forge_node_is_leader_int];
 	}
@@ -448,6 +464,7 @@ uint32_t consultadatos::bloques_asignados(){
 uint32_t consultadatos::bloques_perdidos(){
 	return datoscli[cardano_node_metrics_Forge_didnt_adopt_int];
 	}
+
 std::string consultadatos::exec(std::string command) {
     char *buffer = new char[490];
     std::string result = "";
@@ -567,11 +584,9 @@ bool consultadatos::cargar_configuracion(ngui *ventana, const double ventanapos_
     return true;
 }
 
-uint32_t consultadatos::dias_restante_kes()  //calcula los dias que faltan para renovar el certificado
-{
+uint32_t consultadatos::dias_restante_kes(){  //calcula los dias que faltan para renovar el certificado
     uint32_t diasfaltantes;
     diasfaltantes=datoscli[cardano_node_Forge_metrics_remainingKESPeriods_int]*SLOTSPERKESPERIOD; //convierte a slots
-    diasfaltantes=diasfaltantes/3600; // horas faltantes
-    diasfaltantes=diasfaltantes/24; //dias faltantes
+    diasfaltantes=diasfaltantes/86400; // dias faltantes
     return diasfaltantes;
 }

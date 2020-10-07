@@ -20,7 +20,6 @@ Among the features offered by this monitor are:
 
 * You show the basic statistics of your node in operation, for example, the KES and thus do not forget to renew your keys.
 
-> I have pending in the next version to add the option to visualize the peers and the network connections
 
 ## Compilation
 
