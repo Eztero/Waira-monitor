@@ -257,8 +257,8 @@ bool consultadatos::actualizar_datos(const uint32_t *puerto){
                 else if(buff=="cardano_node_BlockFetchDecision_peers_connectedPeers_int"){
                     datoscli[cardano_node_BlockFetchDecision_peers_connectedPeers_int]=std::stoi(linea.substr(posicion,std::string::npos));
                 }
-                else if(buff=="cardano_node_metrics_upTime_ns"){
-                    datoscli[cardano_node_metrics_upTime_ns]=std::stoull(linea.substr(posicion,std::string::npos));
+                else if(buff=="rts_gc_wall_ms"){
+                    datoscli[rts_gc_wall_ms]=std::stoull(linea.substr(posicion,std::string::npos));
                 }
                 else if(buff=="cardano_node_metrics_Forge_forged_int"){
                     datoscli[cardano_node_metrics_Forge_forged_int]=std::stoi(linea.substr(posicion,std::string::npos));
@@ -306,7 +306,7 @@ bool consultadatos::version_nodo(std::string *nversion){
     return true;
 }
 
-bool consultadatos::cargar_datosreward(){
+bool consultadatos::cargar_datosreward(){ //En Desarrollo
     buff=url_cardanonode;
     if(buff==""){
         return false;
@@ -427,7 +427,7 @@ uint64_t consultadatos::numero_bloque(){
 	}
 	
 uint64_t consultadatos::uptimens(){
-	return datoscli[cardano_node_metrics_upTime_ns];
+	return datoscli[rts_gc_wall_ms];
 }
 
 float consultadatos::densidad(){

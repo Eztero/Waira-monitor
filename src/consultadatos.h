@@ -75,7 +75,7 @@ class consultadatos{
         cardano_node_metrics_Stat_rss_int, //consumo memoria = (cardano_node_metrics_Stat_rss_int*4096)/(1024*1024)
         cardano_node_metrics_txsInMempool_int, //transacciones que se estan procesando en la memoria
         cardano_node_BlockFetchDecision_peers_connectedPeers_int, //muestra los peers conectados
-        cardano_node_metrics_upTime_ns,
+        rts_gc_wall_ms,  //tiempo de actividad del nodo en ms
         cardano_node_metrics_Forge_forged_int, //son los bloques creados
 		cardano_node_metrics_Forge_node_is_leader_int, //son los bloques asignados para crear
 		cardano_node_ChainDB_metrics_forksCreatedNum_int, //Forks creados 
