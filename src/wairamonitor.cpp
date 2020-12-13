@@ -20,7 +20,7 @@ void categorizar_ips(std::string puertos_abiertos[], uint16_t *index_puertosabie
 void salidaforzosa(int a);
 void senalsalida(int a);
 void tiempo_restantes_slot(const uint32_t slot_actual, uint16_t *dia,uint16_t *hora,uint16_t *min,uint16_t *seg);
-void tiempo_restantes_ms(const uint64_t milisegundos, uint16_t *dia,uint16_t *hora,uint16_t *min,uint16_t *seg);
+void tiempo_restantes_seg(const uint64_t segundos, uint16_t *dia,uint16_t *hora,uint16_t *min,uint16_t *seg);
 void cargar_ui();
 
 std::atomic<bool> salir (false);
@@ -691,7 +691,7 @@ void cargar_ui(){
                     
                     
                     //Up time
-                    tiempo_restantes_ms(consulta->uptimens(),&dia,&hora,&min,&seg);
+                    tiempo_restantes_seg(consulta->uptimens(),&dia,&hora,&min,&seg);
                     mvprintw(LINES-1,(COLS/2)-14,"                              ");
                     attron(COLOR_PAIR(2) | A_BOLD);
                     mvprintw(LINES-1,(COLS/2)-14,"Node up time: %id:%ih:%im:%is",dia,hora,min,seg);
@@ -997,12 +997,11 @@ void tiempo_restantes_slot(const uint32_t slot_actual, uint16_t *dia,uint16_t *h
     *seg=(slot_restantes%3600)%60; //seg
 }
 
-void tiempo_restantes_ms(const uint64_t milisegundos, uint16_t *dia,uint16_t *hora,uint16_t *min,uint16_t *seg){
-    uint64_t mseg=milisegundos/1000; //seg
-    *dia=mseg/86400;
-    *hora=(mseg%86400)/3600;
-    *min=(mseg%3600)/60;
-    *seg=(mseg%3600)%60;
+void tiempo_restantes_seg(const uint64_t segundos, uint16_t *dia,uint16_t *hora,uint16_t *min,uint16_t *seg){
+    *dia=segundos/86400;
+    *hora=(segundos%86400)/3600;
+    *min=(segundos%3600)/60;
+    *seg=(segundos%3600)%60;
 }
 
 void salidaforzosa(int a){

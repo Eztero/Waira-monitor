@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <ctime>
 #include <curl/curl.h>
 #include "json.hpp"
 #include "ngui.h"
@@ -72,10 +73,10 @@ class consultadatos{
         cardano_node_Forge_metrics_operationalCertificateExpiryKESPeriod_int, //PERIODO KES EXPIRACION CERTIFICADO
         cardano_node_metrics_txsProcessedNum_int,  //Transacciones totales Procesadas
         cardano_node_ChainDB_metrics_blockNum_int, // indica el numero del bloque
-        cardano_node_metrics_Stat_rss_int, //consumo memoria = (cardano_node_metrics_Stat_rss_int*4096)/(1024*1024)
+        cardano_node_metrics_Mem_resident_int, //consumo memoria = (cardano_node_metrics_Stat_rss_int*4096)/(1024*1024)
         cardano_node_metrics_txsInMempool_int, //transacciones que se estan procesando en la memoria
         cardano_node_BlockFetchDecision_peers_connectedPeers_int, //muestra los peers conectados
-        rts_gc_wall_ms,  //tiempo de actividad del nodo en ms
+        cardano_node_metrics_nodeStartTime_int,  //tiempo de actividad del nodo en time_t
         cardano_node_metrics_Forge_forged_int, //son los bloques creados
 		cardano_node_metrics_Forge_node_is_leader_int, //son los bloques asignados para crear
 		cardano_node_ChainDB_metrics_forksCreatedNum_int, //Forks creados 

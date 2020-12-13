@@ -244,8 +244,8 @@ bool consultadatos::actualizar_datos(const uint32_t *puerto){
                 else if(buff=="cardano_node_ChainDB_metrics_blockNum_int"){
                     datoscli[cardano_node_ChainDB_metrics_blockNum_int]=std::stoul(linea.substr(posicion,std::string::npos));
                 }
-                else if(buff=="cardano_node_metrics_Stat_rss_int"){
-                    datoscli[cardano_node_metrics_Stat_rss_int]=std::stoul(linea.substr(posicion,std::string::npos));
+                else if(buff=="cardano_node_metrics_Mem_resident_int"){
+                    datoscli[cardano_node_metrics_Mem_resident_int]=std::stoul(linea.substr(posicion,std::string::npos));
                 }
                 else if(buff=="cardano_node_metrics_txsInMempool_int"){
                     datoscli[cardano_node_metrics_txsInMempool_int]=std::stoi(linea.substr(posicion,std::string::npos));
@@ -257,8 +257,8 @@ bool consultadatos::actualizar_datos(const uint32_t *puerto){
                 else if(buff=="cardano_node_BlockFetchDecision_peers_connectedPeers_int"){
                     datoscli[cardano_node_BlockFetchDecision_peers_connectedPeers_int]=std::stoi(linea.substr(posicion,std::string::npos));
                 }
-                else if(buff=="rts_gc_wall_ms"){
-                    datoscli[rts_gc_wall_ms]=std::stoull(linea.substr(posicion,std::string::npos));
+                else if(buff=="cardano_node_metrics_nodeStartTime_int"){
+                    datoscli[cardano_node_metrics_nodeStartTime_int]=std::stoull(linea.substr(posicion,std::string::npos));
                 }
                 else if(buff=="cardano_node_metrics_Forge_forged_int"){
                     datoscli[cardano_node_metrics_Forge_forged_int]=std::stoi(linea.substr(posicion,std::string::npos));
@@ -410,7 +410,7 @@ uint64_t consultadatos::stake_activo(){
 }
 
 uint32_t consultadatos::memoria(){
-    uint32buff=(datoscli[cardano_node_metrics_Stat_rss_int]*4096)/(1048576);
+    uint32buff=(datoscli[cardano_node_metrics_Mem_resident_int])/(1048576);
     return uint32buff;	
 }
 
@@ -427,7 +427,14 @@ uint64_t consultadatos::numero_bloque(){
 	}
 	
 uint64_t consultadatos::uptimens(){
-	return datoscli[rts_gc_wall_ms];
+	time_t nodeStartTime=datoscli[cardano_node_metrics_nodeStartTime_int];
+	time_t tiempo_maquina_local;
+	time(&tiempo_maquina_local);
+	uint64_t segundos=0;
+	if(nodeStartTime>0){
+	segundos=difftime(tiempo_maquina_local, nodeStartTime);
+	}
+	return segundos;
 }
 
 float consultadatos::densidad(){
