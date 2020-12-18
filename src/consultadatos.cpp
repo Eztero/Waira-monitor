@@ -15,6 +15,8 @@ consultadatos::consultadatos(){
     pool_id="";
     enable_github=false;
     enable_adapools=false;
+    ticks_a=0;
+    ticks_b=0;
 }
 
 size_t consultadatos::WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) //funcion para curl
@@ -260,6 +262,11 @@ bool consultadatos::actualizar_datos(const uint32_t *puerto){
                 else if(buff=="cardano_node_metrics_nodeStartTime_int"){
                     datoscli[cardano_node_metrics_nodeStartTime_int]=std::stoull(linea.substr(posicion,std::string::npos));
                 }
+                else if(buff=="cardano_node_metrics_Stat_cputicks_int"){
+                    datoscli[cardano_node_metrics_Stat_cputicks_int]=std::stoul(linea.substr(posicion,std::string::npos));
+                    ticks_a=ticks_b;
+                    ticks_b=datoscli[cardano_node_metrics_Stat_cputicks_int];
+                }
                 else if(buff=="cardano_node_metrics_Forge_forged_int"){
                     datoscli[cardano_node_metrics_Forge_forged_int]=std::stoi(linea.substr(posicion,std::string::npos));
                 }
@@ -375,6 +382,14 @@ uint32_t consultadatos::kes_certificado(){
 
 uint32_t consultadatos::kes_termino_certificado(){
     return datoscli[cardano_node_Forge_metrics_operationalCertificateExpiryKESPeriod_int];
+}
+
+uint16_t consultadatos::ticks_porciento(){
+   uint32_t resultado=(ticks_b-ticks_a)/(TIEMPO_ENTRECONSULTAS);
+		if(resultado>100){
+			return 100;
+		}
+    return resultado;
 }
 
 uint32_t consultadatos::puerto_nodo(){

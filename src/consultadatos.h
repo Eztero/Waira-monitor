@@ -10,9 +10,11 @@
 #include "ngui.h"
 #include <iomanip> 
 #include <unistd.h>
-#define TAMANO_ARRAY_DATOS 17
+#define TAMANO_ARRAY_DATOS 18
 #define SLOTSPERKESPERIOD 129600
 #define EPOCHLENGTH 432000    //cada slot demora 1 segundo
+#define TIEMPO_ENTRECONSULTAS 1
+#define HERZ 100
 using json = nlohmann::json;
 
 class consultadatos{
@@ -44,6 +46,7 @@ class consultadatos{
 	uint32_t bloques_creados();
 	uint32_t bloques_asignados();
 	uint32_t bloques_perdidos();
+	uint16_t ticks_porciento();
 	bool cargar_datosreward(); //consulta la cantidad de reward del pool
 	float densidad();
 	std::string densidad_str();
@@ -63,7 +66,7 @@ class consultadatos{
 	std::string exec(std::string command);
 	void clean_array(uint64_t datoscli[]);
 	static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
-	    enum estadistica{  //actualmente tiene 17 No olvidar editar TAMANO_ARRAY_DATOS
+	    enum estadistica{  //actualmente tiene 18 No olvidar editar TAMANO_ARRAY_DATOS
         cardano_node_ChainDB_metrics_epoch_int,  //EPOCA
         cardano_node_ChainDB_metrics_slotInEpoch_int, //SLOT
         cardano_node_ChainDB_metrics_slotNum_int, //TOTAL SLOTS
@@ -80,12 +83,13 @@ class consultadatos{
         cardano_node_metrics_Forge_forged_int, //son los bloques creados
 		cardano_node_metrics_Forge_node_is_leader_int, //son los bloques asignados para crear
 		cardano_node_ChainDB_metrics_forksCreatedNum_int, //Forks creados 
-		cardano_node_metrics_Forge_didnt_adopt_int //bloques no adoptados por otros en la red
+		cardano_node_metrics_Forge_didnt_adopt_int, //bloques no adoptados por otros en la red
+		cardano_node_metrics_Stat_cputicks_int //los ticks de cpu
         //Falta uso de memoria y cpu y bloques minados, incluir bloques por minutos
         
     };
     uint64_t datoscli[TAMANO_ARRAY_DATOS], uint64buff,reward_balance;
-    uint32_t uint32buff;
+    uint32_t uint32buff,ticks_a,ticks_b;
 	uint16_t posicion,port_node,cantidad_ip_in=0;
 	bool haypuertorelay, haypuertonode, enable_github,enable_adapools;
     std::string linea,buff,respuesta_url,ip_in[100],puerto_in[100],ips_out[100],puertos_out[100],poolname,url_socket,url_cardanonode,stakeaddress,pool_id,active_stake,total_stake,pledged,delegators,buff_error, density_str;

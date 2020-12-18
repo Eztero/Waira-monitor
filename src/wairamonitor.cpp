@@ -14,7 +14,7 @@ GPL-3.0 License
 #include <unistd.h>
 #include <csignal>
 #include "lectura_red.h"
-#define VERSION_WAIRA "wairamonitor 0.3"
+#define VERSION_WAIRA "wairamonitor 0.4"
 
 void categorizar_ips(std::string puertos_abiertos[], uint16_t *index_puertosabiertos,std::string ip_p2p[][2], uint16_t *index_ip_p2p,std::string ip_huerfana_salida[][2], uint16_t *index_ip_huerfana_salida,std::string ip_huerfana_entrada[][2], uint16_t *index_ip_huerfana_entrada);
 void salidaforzosa(int a);
@@ -50,7 +50,7 @@ int main(){
         delete ventana;
         return 0;
     }
-
+    
     ventana->borrar_subventana(ventanade_carga[0],ventanade_carga[1],ventanade_carga[2],ventanade_carga[3]);
     ventana->refrescar();
     
@@ -71,7 +71,7 @@ int main(){
 }
 
 void cargar_ui(){
-	 //---Array de datos para TCP
+    //---Array de datos para TCP
     std::string tcp_dec[540][5];
     std::string ip_p2p[100][2]; //[index][ip,puerto_local]
     std::string puerto_escucha[50];
@@ -106,9 +106,10 @@ void cargar_ui(){
         saturacion,
         esp_version,
         esp_nversion,
+        cpu
     };
-    uint16_t espacios[17];
-    for(int a=0;a<17;a++){ //establece todos los espacios en 1
+    uint16_t espacios[18];
+    for(int a=0;a<18;a++){ //establece todos los espacios en 1
         espacios[a]=1;
     }
     bool acceso_prometheus, acceso_github, acceso_adapools, acceso_versionnodo, switchmain, switchpeer, switchabout;
@@ -150,7 +151,7 @@ void cargar_ui(){
     
     //Se calculan las dimenciones de las ventanas
     ventana->crear_ventantaprincipal(consulta->poolnamew(),A_BOLD,VERSION_WAIRA,A_BOLD);
-    ventana->label(1,LINES-2,"Press \"q\" for Quit, \"ESC\" for Main ,\"p\" for Peer,\"a\" for About");
+    ventana->label(1,LINES-2,"Press \"q\" for Quit, \"m\" for Main ,\"p\" for Peer,\"a\" for About");
     pos_ancho=(COLS*0.3);
     if(pos_ancho<31){ ////calculo el ancho minimo para ventana_estadisticapool_node
         pos_ancho=31;
@@ -220,6 +221,7 @@ void cargar_ui(){
         }
         
         ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+1,"Memory Used: ");
+        ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"Cpu: ");
         
         ventana->label(ventana_trx[0]+1,ventana_trx[1]+1,"In mempool: ");
         ventana->label((ventana_trx[0]+ventana_trx[2]-11),ventana_trx[1]+1,"Max: ");
@@ -336,121 +338,23 @@ void cargar_ui(){
             ventana_blockchain[2]=pos_ancho3;
             ventana_blockchain[3]=3;
             
-                //---Dimenciones de las ventanas TCP-----------
-			double alto=LINES-4;
-			ventana_puertos_abiertos[3]=alto;
-			ventana_interconectados[3]=alto;
-			ventana_huerfano_entrada[3]=alto;
-			ventana_huerfano_salida[3]=alto;
-
-			ventana->crear_ventantaprincipal(consulta->poolnamew(),A_BOLD,VERSION_WAIRA,A_BOLD);
-            ventana->label(1,LINES-2,"Press \"q\" for Quit, \"ESC\" for Main ,\"p\" for Peer,\"a\" for About");
-            if(switchpeer==true && switchabout==false && switchmain==false){
-			    //---Crea las ventanas
-			ventana->crear_subventana(ventana_interconectados[0],ventana_interconectados[1],ventana_interconectados[2],ventana_interconectados[3],"Interconected \u2B81","TCP established"); 
-			ventana->crear_subventana(ventana_huerfano_entrada[0],ventana_huerfano_entrada[1],ventana_huerfano_entrada[2],ventana_huerfano_entrada[3],"Lonely input \u2B63","TCP established"); 
-			ventana->crear_subventana(ventana_huerfano_salida[0],ventana_huerfano_salida[1],ventana_huerfano_salida[2],ventana_huerfano_salida[3],"Lonely output \u2B61","TCP established"); 
-			ventana->crear_subventana(ventana_puertos_abiertos[0],ventana_puertos_abiertos[1],ventana_puertos_abiertos[2],ventana_puertos_abiertos[3],"Listen port \u2B26","All TCP ports"); 	
-				}
-            if(switchpeer==false && switchabout==false && switchmain==true){
-            if(consulta->kes_actual()==0){
-                ventana->crear_subventana(ventana_estadisticapool_node[0],ventana_estadisticapool_node[1],ventana_estadisticapool_node[2],ventana_estadisticapool_node[3],"Relay");
-            }else{
-                ventana->crear_subventana(ventana_estadisticapool_node[0],ventana_estadisticapool_node[1],ventana_estadisticapool_node[2],ventana_estadisticapool_node[3],"Producer");
-            }
-            ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
-            ventana->crear_subventana(ventana_memoria[0],ventana_memoria[1],ventana_memoria[2],ventana_memoria[3],"Memory");
-            ventana->crear_subventana(ventana_trx[0],ventana_trx[1],ventana_trx[2],ventana_trx[3],"Transactions");
-            ventana->crear_subventana(ventana_stake[0],ventana_stake[1],ventana_stake[2],ventana_stake[3],"Stake", "Consulted to adapools");
-            ventana->crear_subventana(ventana_mined[0],ventana_mined[1],ventana_mined[2],ventana_mined[3],"Forge");
-            ventana->crear_subventana(ventana_peer[0],ventana_peer[1],ventana_peer[2],ventana_peer[3],"Peers");
-            ventana->crear_subventana(ventana_blockchain[0],ventana_blockchain[1],ventana_blockchain[2],ventana_blockchain[3],"Blockchain");
+            //---Dimenciones de las ventanas TCP-----------
+            double alto=LINES-4;
+            ventana_puertos_abiertos[3]=alto;
+            ventana_interconectados[3]=alto;
+            ventana_huerfano_entrada[3]=alto;
+            ventana_huerfano_salida[3]=alto;
             
-            //Se completa las ventanas con sus nombres
-            if(acceso_prometheus){
-                ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+1,"Epoch: ");
-                ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+2,"Slot: ");
-                ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+3,"Block number: ");
-                ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+8,"Total Slot: ");
-                if(consulta->kes_actual()!=0){
-                    ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+9,"Actual KES period: ");
-                    ventana->label((ventana_estadisticapool_node[0]+ventana_estadisticapool_node[2]*0.5-13),ventana_estadisticapool_node[1]+11,"Operational Certificate", A_UNDERLINE | A_BOLD);
-                    ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+13,"Remaining days for expire: ");
-                    
-                    ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+14,"Created in KES period: ");
-                    ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+15,"Expire in KES period: ");
-                }else{
-                    ventana->label((ventana_estadisticapool_node[0]+ventana_estadisticapool_node[2]*0.5-13),ventana_estadisticapool_node[1]+11,"-No information about KES-", A_UNDERLINE | A_BOLD);
-                }
-                
-                ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+1,"Memory Used: ");
-                
-                ventana->label(ventana_trx[0]+1,ventana_trx[1]+1,"In mempool: ");
-                ventana->label((ventana_trx[0]+ventana_trx[2]-11),ventana_trx[1]+1,"Max: ");
-                ventana->label(ventana_trx[0]+1,ventana_trx[1]+4,"Total Processed: ");
-                
-                ventana->label(ventana_peer[0]+1,ventana_peer[1]+1,"Connected: ");
-                
-                ventana->label(ventana_blockchain[0]+1,ventana_blockchain[1]+1,"Density: ");
-                ventana->label(ventana_blockchain[0]+1,ventana_blockchain[1]+2,"Fork: ");
-                
-                ventana->label(ventana_mined[0]+1,ventana_mined[1]+1,"Slots lead: ");
-                ventana->label(ventana_mined[0]+1,ventana_mined[1]+2,"Blocks minted: ");
-                ventana->label(ventana_mined[0]+1,ventana_mined[1]+3,"Slots missed: ");
-                
-                
-            }else{
-                ventana->label((ventana_estadisticapool_node[0]+2),ventana_estadisticapool_node[1]+7,"Can't be accessed");
-                ventana->label((ventana_estadisticapool_node[0]+2),ventana_estadisticapool_node[1]+8,"to port %s",cbuff);
-                ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+1,"Can't be accessed");
-                ventana->label(ventana_trx[0]+1,ventana_trx[1]+1,"Can't be accessed");
-                ventana->label(ventana_peer[0]+1,ventana_peer[1]+1,"Can't be accessed");
-                ventana->label(ventana_blockchain[0]+1,ventana_blockchain[1]+1,"Can't be accessed");
-                ventana->label(ventana_mined[0]+1,ventana_mined[1]+2,"Can't be accessed");
+            ventana->crear_ventantaprincipal(consulta->poolnamew(),A_BOLD,VERSION_WAIRA,A_BOLD);
+            ventana->label(1,LINES-2,"Press \"q\" for Quit, \"m\" for Main ,\"p\" for Peer,\"a\" for About");
+            if(switchpeer==true && switchabout==false && switchmain==false){
+                //---Crea las ventanas
+                ventana->crear_subventana(ventana_interconectados[0],ventana_interconectados[1],ventana_interconectados[2],ventana_interconectados[3],"Interconected \u2B81","TCP established"); 
+                ventana->crear_subventana(ventana_huerfano_entrada[0],ventana_huerfano_entrada[1],ventana_huerfano_entrada[2],ventana_huerfano_entrada[3],"Lonely input \u2B63","TCP established"); 
+                ventana->crear_subventana(ventana_huerfano_salida[0],ventana_huerfano_salida[1],ventana_huerfano_salida[2],ventana_huerfano_salida[3],"Lonely output \u2B61","TCP established"); 
+                ventana->crear_subventana(ventana_puertos_abiertos[0],ventana_puertos_abiertos[1],ventana_puertos_abiertos[2],ventana_puertos_abiertos[3],"Listen port \u2B26","All TCP ports"); 	
             }
-            if(acceso_github){
-                ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
-                ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+1,"status");
-                ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Github");
-                ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
-            }else{
-                ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
-                ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+1,"status");	
-                ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
-                if(!consulta->github_habilitado()){
-                    ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Queries to Github are disable");
-                }
-                else{
-                    ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,"Can't be accessed to Github");
-                }	
-            }
-            if(acceso_adapools){
-                ventana->label(ventana_stake[0]+1,ventana_stake[1]+1,"Pledge: ");
-                ventana->label(ventana_stake[0]+1,ventana_stake[1]+2,"Total Stake: ");
-                ventana->label(ventana_stake[0]+1,ventana_stake[1]+3,"Live Stake: ");
-                ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Delegator: ");
-                ventana->label((ventana_stake[0]+ventana_stake[2]*0.5-6),ventana_stake[1]+6,"Saturation:");   
-            }else{
-                if(!consulta->adapools_habilitado()){
-                    ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Queries to Adapools are disable");
-                }
-                else{
-                    ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Can't be accessed to Adapools");
-                }
-            }
-            //switchmain=true;
-            //switchpeer=false;
-            //switchabout=false;
-            ventana->refrescar();
-		}
-		ktecla=0;
-        };break;
-        case 27:{  //tecla esc
-            if(switchmain==false &&(switchpeer=true || switchabout==true)){
-                ventana->borrar_subventana(0,0,COLS,LINES);
-                ventana->refrescar();
-                ventana->crear_ventantaprincipal(consulta->poolnamew(),A_BOLD,VERSION_WAIRA,A_BOLD);
-                ventana->label(1,LINES-2,"Press \"q\" for Quit, \"ESC\" for Main ,\"p\" for Peer,\"a\" for About");
+            if(switchpeer==false && switchabout==false && switchmain==true){
                 if(consulta->kes_actual()==0){
                     ventana->crear_subventana(ventana_estadisticapool_node[0],ventana_estadisticapool_node[1],ventana_estadisticapool_node[2],ventana_estadisticapool_node[3],"Relay");
                 }else{
@@ -482,6 +386,106 @@ void cargar_ui(){
                     }
                     
                     ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+1,"Memory Used: ");
+                    ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"Cpu: ");
+                    
+                    ventana->label(ventana_trx[0]+1,ventana_trx[1]+1,"In mempool: ");
+                    ventana->label((ventana_trx[0]+ventana_trx[2]-11),ventana_trx[1]+1,"Max: ");
+                    ventana->label(ventana_trx[0]+1,ventana_trx[1]+4,"Total Processed: ");
+                    
+                    ventana->label(ventana_peer[0]+1,ventana_peer[1]+1,"Connected: ");
+                    
+                    ventana->label(ventana_blockchain[0]+1,ventana_blockchain[1]+1,"Density: ");
+                    ventana->label(ventana_blockchain[0]+1,ventana_blockchain[1]+2,"Fork: ");
+                    
+                    ventana->label(ventana_mined[0]+1,ventana_mined[1]+1,"Slots lead: ");
+                    ventana->label(ventana_mined[0]+1,ventana_mined[1]+2,"Blocks minted: ");
+                    ventana->label(ventana_mined[0]+1,ventana_mined[1]+3,"Slots missed: ");
+                    
+                    
+                }else{
+                    ventana->label((ventana_estadisticapool_node[0]+2),ventana_estadisticapool_node[1]+7,"Can't be accessed");
+                    ventana->label((ventana_estadisticapool_node[0]+2),ventana_estadisticapool_node[1]+8,"to port %s",cbuff);
+                    ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+1,"Can't be accessed");
+                    ventana->label(ventana_trx[0]+1,ventana_trx[1]+1,"Can't be accessed");
+                    ventana->label(ventana_peer[0]+1,ventana_peer[1]+1,"Can't be accessed");
+                    ventana->label(ventana_blockchain[0]+1,ventana_blockchain[1]+1,"Can't be accessed");
+                    ventana->label(ventana_mined[0]+1,ventana_mined[1]+2,"Can't be accessed");
+                }
+                if(acceso_github){
+                    ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
+                    ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+1,"status");
+                    ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Github");
+                    ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
+                }else{
+                    ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
+                    ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+1,"status");	
+                    ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
+                    if(!consulta->github_habilitado()){
+                        ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Queries to Github are disable");
+                    }
+                    else{
+                        ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,"Can't be accessed to Github");
+                    }	
+                }
+                if(acceso_adapools){
+                    ventana->label(ventana_stake[0]+1,ventana_stake[1]+1,"Pledge: ");
+                    ventana->label(ventana_stake[0]+1,ventana_stake[1]+2,"Total Stake: ");
+                    ventana->label(ventana_stake[0]+1,ventana_stake[1]+3,"Live Stake: ");
+                    ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Delegator: ");
+                    ventana->label((ventana_stake[0]+ventana_stake[2]*0.5-6),ventana_stake[1]+6,"Saturation:");   
+                }else{
+                    if(!consulta->adapools_habilitado()){
+                        ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Queries to Adapools are disable");
+                    }
+                    else{
+                        ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Can't be accessed to Adapools");
+                    }
+                }
+                //switchmain=true;
+                //switchpeer=false;
+                //switchabout=false;
+                ventana->refrescar();
+            }
+            ktecla=0;
+        };break;
+        case 109:{  //tecla m
+            if(switchmain==false &&(switchpeer=true || switchabout==true)){
+                ventana->borrar_subventana(0,0,COLS,LINES);
+                ventana->refrescar();
+                ventana->crear_ventantaprincipal(consulta->poolnamew(),A_BOLD,VERSION_WAIRA,A_BOLD);
+                ventana->label(1,LINES-2,"Press \"q\" for Quit, \"m\" for Main ,\"p\" for Peer,\"a\" for About");
+                if(consulta->kes_actual()==0){
+                    ventana->crear_subventana(ventana_estadisticapool_node[0],ventana_estadisticapool_node[1],ventana_estadisticapool_node[2],ventana_estadisticapool_node[3],"Relay");
+                }else{
+                    ventana->crear_subventana(ventana_estadisticapool_node[0],ventana_estadisticapool_node[1],ventana_estadisticapool_node[2],ventana_estadisticapool_node[3],"Producer");
+                }
+                ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
+                ventana->crear_subventana(ventana_memoria[0],ventana_memoria[1],ventana_memoria[2],ventana_memoria[3],"Memory");
+                ventana->crear_subventana(ventana_trx[0],ventana_trx[1],ventana_trx[2],ventana_trx[3],"Transactions");
+                ventana->crear_subventana(ventana_stake[0],ventana_stake[1],ventana_stake[2],ventana_stake[3],"Stake", "Consulted to adapools");
+                ventana->crear_subventana(ventana_mined[0],ventana_mined[1],ventana_mined[2],ventana_mined[3],"Forge");
+                ventana->crear_subventana(ventana_peer[0],ventana_peer[1],ventana_peer[2],ventana_peer[3],"Peers");
+                ventana->crear_subventana(ventana_blockchain[0],ventana_blockchain[1],ventana_blockchain[2],ventana_blockchain[3],"Blockchain");
+                
+                //Se completa las ventanas con sus nombres
+                if(acceso_prometheus){
+                    ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+1,"Epoch: ");
+                    ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+2,"Slot: ");
+                    ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+3,"Block number: ");
+                    ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+8,"Total Slot: ");
+                    if(consulta->kes_actual()!=0){
+                        ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+9,"Actual KES period: ");
+                        ventana->label((ventana_estadisticapool_node[0]+ventana_estadisticapool_node[2]*0.5-13),ventana_estadisticapool_node[1]+11,"Operational Certificate", A_UNDERLINE | A_BOLD);
+                        ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+13,"Remaining days for expire: ");
+                        
+                        ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+14,"Created in KES period: ");
+                        ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+15,"Expire in KES period: ");
+                    }else{
+                        ventana->label((ventana_estadisticapool_node[0]+ventana_estadisticapool_node[2]*0.5-13),ventana_estadisticapool_node[1]+11,"-No information about KES-", A_UNDERLINE | A_BOLD);
+                    }
+                    
+                    ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+1,"Memory Used: ");
+                    ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"Cpu: ");
                     
                     ventana->label(ventana_trx[0]+1,ventana_trx[1]+1,"In mempool: ");
                     ventana->label((ventana_trx[0]+ventana_trx[2]-11),ventana_trx[1]+1,"Max: ");
@@ -550,34 +554,35 @@ void cargar_ui(){
                 ventana->borrar_subventana(0,0,COLS,LINES);
                 ventana->refrescar();
                 ventana->crear_ventantaprincipal(consulta->poolnamew(),A_BOLD,VERSION_WAIRA,A_BOLD);
-                ventana->label(1,LINES-2,"Press \"q\" for Quit, \"ESC\" for Main ,\"p\" for Peer,\"a\" for About");
-                ventana->label((COLS/2)-20,(LINES/2)-3,"Created for Eztero");
-                ventana->label((COLS/2)-20,(LINES/2)-2,"Operator of TricahuePool");
-                ventana->label((COLS/2)-20,(LINES/2)-1,"Twitter: @TCHPool");
-                ventana->label((COLS/2)-20,(LINES/2)-0,"Web: https://eztero.github.io/TricahuePool/index_en.html");
+                ventana->label(1,LINES-2,"Press \"q\" for Quit, \"m\" for Main ,\"p\" for Peer,\"a\" for About");
+                ventana->label((COLS/2)-30,(LINES/2)-4,"WairaMonitor is a lightweight monitor written in c++ ");
+                ventana->label((COLS/2)-30,(LINES/2)-3,"and uses ncurses for its graphical interface.");
+                ventana->label((COLS/2)-30,(LINES/2)-1,"Created for Eztero, Operator of TricahuePool");
+                ventana->label((COLS/2)-30,(LINES/2)-0,"Twitter: @TCHPool");
+                ventana->label((COLS/2)-30,(LINES/2)+1,"Web: https://eztero.github.io/TricahuePool/index_en.html");
                 switchmain=false;
                 switchpeer=false;
                 switchabout=true;
                 ventana->refrescar();
             }
         };break;
-        case 112:{ //tecla p      ///RECORDAR USAR DEFAULT CON if(switchpeer){} PARA LOS DATOS
+        case 112:{ //tecla p
             if(switchpeer==false && (switchabout==true || switchmain==true)){
                 ventana->borrar_subventana(0,0,COLS,LINES);
                 ventana->refrescar();
                 ventana->crear_ventantaprincipal(consulta->poolnamew(),A_BOLD,VERSION_WAIRA,A_BOLD);
-                ventana->label(1,LINES-2,"Press \"q\" for Quit, \"ESC\" for Main ,\"p\" for Peer,\"a\" for About");
-				//---Crea las ventanas
-				ventana->crear_subventana(ventana_interconectados[0],ventana_interconectados[1],ventana_interconectados[2],ventana_interconectados[3],"Interconected \u2B81","TCP established"); 
-				ventana->crear_subventana(ventana_huerfano_entrada[0],ventana_huerfano_entrada[1],ventana_huerfano_entrada[2],ventana_huerfano_entrada[3],"Lonely input \u2B63","TCP established"); 
-				ventana->crear_subventana(ventana_huerfano_salida[0],ventana_huerfano_salida[1],ventana_huerfano_salida[2],ventana_huerfano_salida[3],"Lonely output \u2B61","TCP established"); 
-				ventana->crear_subventana(ventana_puertos_abiertos[0],ventana_puertos_abiertos[1],ventana_puertos_abiertos[2],ventana_puertos_abiertos[3],"Listen port \u2B26","All TCP ports"); 
+                ventana->label(1,LINES-2,"Press \"q\" for Quit, \"m\" for Main ,\"p\" for Peer,\"a\" for About");
+                //---Crea las ventanas
+                ventana->crear_subventana(ventana_interconectados[0],ventana_interconectados[1],ventana_interconectados[2],ventana_interconectados[3],"Interconected \u2B81","TCP established"); 
+                ventana->crear_subventana(ventana_huerfano_entrada[0],ventana_huerfano_entrada[1],ventana_huerfano_entrada[2],ventana_huerfano_entrada[3],"Lonely input \u2B63","TCP established"); 
+                ventana->crear_subventana(ventana_huerfano_salida[0],ventana_huerfano_salida[1],ventana_huerfano_salida[2],ventana_huerfano_salida[3],"Lonely output \u2B61","TCP established"); 
+                ventana->crear_subventana(ventana_puertos_abiertos[0],ventana_puertos_abiertos[1],ventana_puertos_abiertos[2],ventana_puertos_abiertos[3],"Listen port \u2B26","All TCP ports"); 
                 switchpeer=true;
                 switchmain=false;
                 switchabout=false;
                 ventana->refrescar();
             }
-				ktecla=0;
+            ktecla=0;
         };break;
         default:{
             if(switchmain){
@@ -587,30 +592,32 @@ void cargar_ui(){
                     //ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+1,"Epoch: ");
                     
                     ventana->crear_linea_horizontal(ventana_estadisticapool_node[0]+10,ventana_estadisticapool_node[1]+1,espacios[epoca],' ');
-                    ventana->label(ventana_estadisticapool_node[0]+10,ventana_estadisticapool_node[1]+1,std::to_string(consulta->epoca()).c_str());
+                    ventana->label_uint32(ventana_estadisticapool_node[0]+10,ventana_estadisticapool_node[1]+1,consulta->epoca());
+                    //mvprintw(ventana_estadisticapool_node[1]+1,ventana_estadisticapool_node[0]+10,"%u",consulta->epoca());
+                    
                     espacios[epoca]=std::to_string(consulta->epoca()).length();
                     //ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+2,"Slot: ");
                     ventana->crear_linea_horizontal(ventana_estadisticapool_node[0]+8,ventana_estadisticapool_node[1]+2,espacios[slot_epoca],' ');
-                    ventana->label(ventana_estadisticapool_node[0]+8,ventana_estadisticapool_node[1]+2,std::to_string(consulta->slot_epoca()).c_str());
+                    ventana->label_uint32(ventana_estadisticapool_node[0]+8,ventana_estadisticapool_node[1]+2,consulta->slot_epoca());
                     espacios[slot_epoca]=std::to_string(consulta->slot_epoca()).length();
                     //ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+3,"Block number: ");
-                    ventana->label(ventana_estadisticapool_node[0]+15,ventana_estadisticapool_node[1]+3,std::to_string(consulta->numero_bloque()).c_str());
+                    ventana->label_uint64(ventana_estadisticapool_node[0]+15,ventana_estadisticapool_node[1]+3,consulta->numero_bloque());
                     
                     mvprintw(ventana_estadisticapool_node[1]+5,ventana_estadisticapool_node[0]+ventana_estadisticapool_node[2]*0.5-14,"                              ");
                     mvprintw(ventana_estadisticapool_node[1]+5,ventana_estadisticapool_node[0]+ventana_estadisticapool_node[2]*0.5-14,"Epoch ends in: %id:%ih:%im:%is",dia,hora,min,seg);
                     ventana->slider_horizontal(ventana_estadisticapool_node[0]+2,ventana_estadisticapool_node[1]+6,ventana_estadisticapool_node[2]-3,EPOCHLENGTH,consulta->slot_epoca());
                     //ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+8,"Total Slot: ");
-                    ventana->label(ventana_estadisticapool_node[0]+14,ventana_estadisticapool_node[1]+8,std::to_string(consulta->totalslot()).c_str());
+                    ventana->label_uint64(ventana_estadisticapool_node[0]+14,ventana_estadisticapool_node[1]+8,consulta->totalslot());
                     
                     if(consulta->kes_certificado()!=0){
                         //ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+9,"Actual KES period: ");
-                        ventana->label(ventana_estadisticapool_node[0]+21,ventana_estadisticapool_node[1]+9,std::to_string(consulta->kes_actual()).c_str());
+                        ventana->label_uint32(ventana_estadisticapool_node[0]+21,ventana_estadisticapool_node[1]+9,consulta->kes_actual());
                         //ventana->label((ventana_estadisticapool_node[0]+ventana_estadisticapool_node[2]*0.5-13),ventana_estadisticapool_node[1]+11,"---Pool Certificate ---", A_UNDERLINE | A_BOLD);
                         //ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+13,"Remaining days for expire: ");
                         tbuf=consulta->dias_restante_kes();
                         if(tbuf>20){
                             ventana->crear_linea_horizontal(ventana_estadisticapool_node[0]+28,ventana_estadisticapool_node[1]+13,espacios[dias_restante_kes],' ');
-                            ventana->label(ventana_estadisticapool_node[0]+28,ventana_estadisticapool_node[1]+13,std::to_string(tbuf).c_str());
+                            ventana->label_uint32(ventana_estadisticapool_node[0]+28,ventana_estadisticapool_node[1]+13,tbuf);
                             espacios[dias_restante_kes]=std::to_string(tbuf).length();
                         }
                         else if(tbuf>5 && tbuf<=20 ){
@@ -624,9 +631,9 @@ void cargar_ui(){
                             espacios[dias_restante_kes]=std::to_string(tbuf).length();
                         }
                         //ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+14,"Created in KES period: ");
-                        ventana->label(ventana_estadisticapool_node[0]+25,ventana_estadisticapool_node[1]+14,std::to_string(consulta->kes_certificado()).c_str());
+                        ventana->label_uint32(ventana_estadisticapool_node[0]+25,ventana_estadisticapool_node[1]+14,consulta->kes_certificado());
                         //ventana->label(ventana_estadisticapool_node[0]+1,ventana_estadisticapool_node[1]+15,"Expire in KES period: ");
-                        ventana->label(ventana_estadisticapool_node[0]+24,ventana_estadisticapool_node[1]+15,std::to_string(consulta->kes_termino_certificado()).c_str());
+                        ventana->label_uint32(ventana_estadisticapool_node[0]+24,ventana_estadisticapool_node[1]+15,consulta->kes_termino_certificado());
                         
                     }else{
                         ventana->label((ventana_estadisticapool_node[0]+ventana_estadisticapool_node[2]*0.5-13),ventana_estadisticapool_node[1]+11,"-No information about KES-", A_UNDERLINE | A_BOLD);
@@ -636,10 +643,17 @@ void cargar_ui(){
                     //ventana->crear_subventana(ventana_memoria[0],ventana_memoria[1],ventana_memoria[2],ventana_memoria[3],"Memory");
                     //ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+1,"Memory Used: ");
                     ventana->crear_linea_horizontal(ventana_memoria[0]+14,ventana_memoria[1]+1,espacios[memoria],' ');
-                    ventana->label(ventana_memoria[0]+14,ventana_memoria[1]+1,std::to_string(consulta->memoria()).c_str());
+                    ventana->label_uint32(ventana_memoria[0]+14,ventana_memoria[1]+1,consulta->memoria());
                     espacios[memoria]=std::to_string(consulta->memoria()).length();
                     ventana->label(ventana_memoria[0]+15+espacios[memoria],ventana_memoria[1]+1,"MB");
-                    
+                    espacios[memoria]=(espacios[memoria])+3;
+                    //ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"Cpu: ");
+                    ventana->slider_horizontal(ventana_memoria[0]+5,ventana_memoria[1]+2,ventana_memoria[2]-11,100,consulta->ticks_porciento());
+                    ventana->crear_linea_horizontal(ventana_memoria[0]+(ventana_memoria[2]-6),ventana_memoria[1]+2,espacios[cpu],' ');
+                    ventana->label_uint16(ventana_memoria[0]+(ventana_memoria[2]-6),ventana_memoria[1]+2,consulta->ticks_porciento());
+                    espacios[cpu]=std::to_string(consulta->ticks_porciento()).length();
+                    ventana->label(ventana_memoria[0]+(ventana_memoria[2]-6)+espacios[cpu],ventana_memoria[1]+2,"\uFF05");
+                    espacios[cpu]=(espacios[cpu])+1;
                     
                     txmin=consulta->transacciones_mempool();
                     if(txmin>txmax){
@@ -648,20 +662,20 @@ void cargar_ui(){
                     //ventana->crear_subventana(ventana_trx[0],ventana_trx[1],ventana_trx[2],ventana_trx[3],"Transactions");
                     //ventana->label(ventana_trx[0]+1,ventana_trx[1]+1,"In mempool: ");
                     ventana->crear_linea_horizontal(ventana_trx[0]+13,ventana_trx[1]+1,espacios[transacciones_mempool],' ');
-                    ventana->label(ventana_trx[0]+13,ventana_trx[1]+1,std::to_string(txmin).c_str());
+                    ventana->label_uint32(ventana_trx[0]+13,ventana_trx[1]+1,txmin);
                     espacios[transacciones_mempool]=std::to_string(txmin).length();
                     //ventana->label((ventana_trx[0]+ventana_trx[2]-11),ventana_trx[1]+1,"Max: ");
-                    ventana->label((ventana_trx[0]+ventana_trx[2]-6),ventana_trx[1]+1,std::to_string(txmax).c_str());
+                    ventana->label_uint32((ventana_trx[0]+ventana_trx[2]-6),ventana_trx[1]+1,txmax);
                     ventana->slider_horizontal(ventana_trx[0]+2,ventana_trx[1]+2,ventana_trx[2]-3,txmax,txmin);
                     //ventana->label(ventana_trx[0]+1,ventana_trx[1]+4,"Total Processed: ");
-                    ventana->label(ventana_trx[0]+18,ventana_trx[1]+4,std::to_string(consulta->transacciones_procesadas()).c_str());
+                    ventana->label_uint64(ventana_trx[0]+18,ventana_trx[1]+4,consulta->transacciones_procesadas());
                     
                     
                     
                     //ventana->crear_subventana(ventana_peer[0],ventana_peer[1],ventana_peer[2],ventana_peer[3],"Peers");
                     //ventana->label(ventana_peer[0]+1,ventana_peer[1]+1,"Connected: ");
                     ventana->crear_linea_horizontal(ventana_peer[0]+12,ventana_peer[1]+1,espacios[peers],' ');
-                    ventana->label(ventana_peer[0]+12,ventana_peer[1]+1,std::to_string(consulta->peers()).c_str());
+                    ventana->label_uint16(ventana_peer[0]+12,ventana_peer[1]+1,consulta->peers());
                     espacios[peers]=std::to_string(consulta->peers()).length();
                     
                     
@@ -671,7 +685,7 @@ void cargar_ui(){
                     ventana->label(ventana_blockchain[0]+10+std::to_string(consulta->densidad()).length(),ventana_blockchain[1]+1,"\uFF05");
                     //ventana->label(ventana_blockchain[0]+1,ventana_blockchain[1]+2,"Fork: ");
                     ventana->crear_linea_horizontal(ventana_blockchain[0]+7,ventana_blockchain[1]+2,espacios[forks],' ');
-                    ventana->label(ventana_blockchain[0]+7,ventana_blockchain[1]+2,std::to_string(consulta->forks()).c_str());  
+                    ventana->label_uint32(ventana_blockchain[0]+7,ventana_blockchain[1]+2,consulta->forks());  
                     espacios[forks]=std::to_string(consulta->forks()).length();                
                     
                     
@@ -734,12 +748,12 @@ void cargar_ui(){
                         ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+2,"Error",COLOR_PAIR(1) | A_BOLD);
                     }
                 }//else{
-                 //   if(!consulta->github_habilitado()){
-                 //       ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Queries to Github are disable");
-                 //   }
-                 //   else{
-                 //       ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,"Can't be accessed to Github");
-                 //   }
+                //   if(!consulta->github_habilitado()){
+                //       ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Queries to Github are disable");
+                //   }
+                //   else{
+                //       ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,"Can't be accessed to Github");
+                //   }
                 //}
                 
                 
@@ -765,27 +779,27 @@ void cargar_ui(){
                     //ventana->crear_subventana(ventana_stake[0],ventana_stake[1],ventana_stake[2],ventana_stake[3],"Stake", "Consulted to adapools");
                     //ventana->label(ventana_stake[0]+1,ventana_stake[1]+1,"Pledge: ");
                     ventana->crear_linea_horizontal(ventana_stake[0]+9,ventana_stake[1]+1,2+espacios[pledge],' ');
-                    ventana->label(ventana_stake[0]+9,ventana_stake[1]+1,std::to_string(consulta->pledge()).c_str());
+                    ventana->label_uint64(ventana_stake[0]+9,ventana_stake[1]+1,consulta->pledge());
                     espacios[pledge]=std::to_string(consulta->pledge()).length();
                     ventana->label(ventana_stake[0]+10+espacios[pledge],ventana_stake[1]+1,"\u20B3");
                     //ventana->label(ventana_stake[0]+1,ventana_stake[1]+2,"Total Stake: ");
                     ventana->crear_linea_horizontal(ventana_stake[0]+14,ventana_stake[1]+2,2+espacios[stake_total],' ');
-                    ventana->label(ventana_stake[0]+14,ventana_stake[1]+2,std::to_string(consulta->stake_total()).c_str());
+                    ventana->label_uint64(ventana_stake[0]+14,ventana_stake[1]+2,consulta->stake_total());
                     espacios[stake_total]=std::to_string(consulta->stake_total()).length();
                     ventana->label(ventana_stake[0]+15+espacios[stake_total],ventana_stake[1]+2,"\u20B3");
                     //ventana->label(ventana_stake[0]+1,ventana_stake[1]+3,"Live Stake: ");
                     ventana->crear_linea_horizontal(ventana_stake[0]+13,ventana_stake[1]+3,2+espacios[stake_activo],' ');
-                    ventana->label(ventana_stake[0]+13,ventana_stake[1]+3,std::to_string(consulta->stake_activo()).c_str());
+                    ventana->label_uint64(ventana_stake[0]+13,ventana_stake[1]+3,consulta->stake_activo());
                     espacios[stake_activo]=std::to_string(consulta->stake_activo()).length();
                     ventana->label(ventana_stake[0]+14+espacios[stake_activo],ventana_stake[1]+3,"\u20B3");
                     //ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Delegator: ");
                     ventana->crear_linea_horizontal(ventana_stake[0]+12,ventana_stake[1]+4,2+espacios[delegadores],' ');
-                    ventana->label(ventana_stake[0]+12,ventana_stake[1]+4,std::to_string(consulta->delegadores()).c_str());
+                    ventana->label_uint32(ventana_stake[0]+12,ventana_stake[1]+4,consulta->delegadores());
                     espacios[delegadores]=std::to_string(consulta->delegadores()).length();
                     ventana->label(ventana_stake[0]+13+espacios[delegadores],ventana_stake[1]+4,"\uC6C3");
                     //ventana->label((ventana_stake[0]+ventana_stake[2]*0.5-6),ventana_stake[1]+6,"Saturation:");
                     ventana->crear_linea_horizontal((ventana_stake[0]+ventana_stake[2]*0.5+6),ventana_stake[1]+6,2+espacios[saturacion],' ');
-                    ventana->label((ventana_stake[0]+ventana_stake[2]*0.5+6),ventana_stake[1]+6,std::to_string(consulta->saturacion()).c_str());
+                    ventana->label_uint16((ventana_stake[0]+ventana_stake[2]*0.5+6),ventana_stake[1]+6,consulta->saturacion());
                     espacios[saturacion]=std::to_string(consulta->saturacion()).length();
                     ventana->label((ventana_stake[0]+ventana_stake[2]*0.5+7+espacios[saturacion]),ventana_stake[1]+6,"\uFF05");
                     ventana->slider_horizontal(ventana_stake[0]+2,ventana_stake[1]+7,ventana_stake[2]-3,100,(consulta->saturacion()));
@@ -803,66 +817,66 @@ void cargar_ui(){
                 
             }
             else if(switchpeer){
-				    //---Consulta los datos locales TCP
-    categorizar_ips(&puerto_escucha[0],&index_puerto_escucha,&ip_p2p[0],&index_ip_p2p,&ip_huerfana_salida[0],&index_ip_huerfana_salida,&ip_huerfana_entrada[0],&index_ip_huerfana_entrada);
-
-	//---Imprime los datos en sus respectivas ventanas
-	uint16_t numero_maximo_filas=LINES-5;
-	
-	ventana->borrar_subventana(ventana_interconectados[0]+1,ventana_interconectados[1]+1,23,buff_index_ip_p2p-1);
-    if(index_ip_p2p>numero_maximo_filas){index_ip_p2p=numero_maximo_filas;}
-    for(uint16_t a=0;a<index_ip_p2p;a++){
-    mvprintw(ventana_interconectados[1]+(a+1),ventana_interconectados[0]+1,"%s : %s",ip_p2p[a][0].c_str(),ip_p2p[a][1].c_str());
-	}
-	buff_index_ip_p2p=index_ip_p2p;
-	
-	ventana->borrar_subventana(ventana_huerfano_entrada[0]+1,ventana_huerfano_entrada[1]+1,23,buff_index_ip_huerfana_entrada-1);
-	if(index_ip_huerfana_entrada>numero_maximo_filas){index_ip_huerfana_entrada=numero_maximo_filas;}
-	for(uint16_t a=0;a<index_ip_huerfana_entrada;a++){
-    mvprintw(ventana_huerfano_entrada[1]+(a+1),ventana_huerfano_entrada[0]+1,"%s : %s",ip_huerfana_entrada[a][0].c_str(),ip_huerfana_entrada[a][1].c_str());
-	}
-	buff_index_ip_huerfana_entrada=index_ip_huerfana_entrada;
-	
-	ventana->borrar_subventana(ventana_huerfano_salida[0]+1,ventana_huerfano_salida[1]+1,23,buff_index_ip_huerfana_salida-1);
-	if(index_ip_huerfana_salida>numero_maximo_filas){index_ip_huerfana_salida=numero_maximo_filas;}
-	for(uint16_t a=0;a<index_ip_huerfana_salida;a++){
-    mvprintw(ventana_huerfano_salida[1]+(a+1),ventana_huerfano_salida[0]+1,"%s : %s",ip_huerfana_salida[a][0].c_str(),ip_huerfana_salida[a][1].c_str());
-	}
-	buff_index_ip_huerfana_salida=index_ip_huerfana_salida;
-	
-	ventana->borrar_subventana(ventana_puertos_abiertos[0]+1,ventana_puertos_abiertos[1]+1,18,buff_index_puerto_escucha-1);
-	if(index_puerto_escucha>numero_maximo_filas){index_puerto_escucha=numero_maximo_filas;}
-	for(uint16_t a=0;a<index_puerto_escucha;a++){
-    mvprintw(ventana_puertos_abiertos[1]+(a+1),ventana_puertos_abiertos[0]+1,"%s",puerto_escucha[a].c_str());
-	}
-	buff_index_puerto_escucha=index_puerto_escucha;
-	//---Refresca la pantalla
-	ventana->refrescar();
-				}
+                //---Consulta los datos locales TCP
+                categorizar_ips(&puerto_escucha[0],&index_puerto_escucha,&ip_p2p[0],&index_ip_p2p,&ip_huerfana_salida[0],&index_ip_huerfana_salida,&ip_huerfana_entrada[0],&index_ip_huerfana_entrada);
+                
+                //---Imprime los datos en sus respectivas ventanas
+                uint16_t numero_maximo_filas=LINES-5;
+                
+                ventana->borrar_subventana(ventana_interconectados[0]+1,ventana_interconectados[1]+1,23,buff_index_ip_p2p-1);
+                if(index_ip_p2p>numero_maximo_filas){index_ip_p2p=numero_maximo_filas;}
+                for(uint16_t a=0;a<index_ip_p2p;a++){
+                    mvprintw(ventana_interconectados[1]+(a+1),ventana_interconectados[0]+1,"%s : %s",ip_p2p[a][0].c_str(),ip_p2p[a][1].c_str());
+                }
+                buff_index_ip_p2p=index_ip_p2p;
+                
+                ventana->borrar_subventana(ventana_huerfano_entrada[0]+1,ventana_huerfano_entrada[1]+1,23,buff_index_ip_huerfana_entrada-1);
+                if(index_ip_huerfana_entrada>numero_maximo_filas){index_ip_huerfana_entrada=numero_maximo_filas;}
+                for(uint16_t a=0;a<index_ip_huerfana_entrada;a++){
+                    mvprintw(ventana_huerfano_entrada[1]+(a+1),ventana_huerfano_entrada[0]+1,"%s : %s",ip_huerfana_entrada[a][0].c_str(),ip_huerfana_entrada[a][1].c_str());
+                }
+                buff_index_ip_huerfana_entrada=index_ip_huerfana_entrada;
+                
+                ventana->borrar_subventana(ventana_huerfano_salida[0]+1,ventana_huerfano_salida[1]+1,23,buff_index_ip_huerfana_salida-1);
+                if(index_ip_huerfana_salida>numero_maximo_filas){index_ip_huerfana_salida=numero_maximo_filas;}
+                for(uint16_t a=0;a<index_ip_huerfana_salida;a++){
+                    mvprintw(ventana_huerfano_salida[1]+(a+1),ventana_huerfano_salida[0]+1,"%s : %s",ip_huerfana_salida[a][0].c_str(),ip_huerfana_salida[a][1].c_str());
+                }
+                buff_index_ip_huerfana_salida=index_ip_huerfana_salida;
+                
+                ventana->borrar_subventana(ventana_puertos_abiertos[0]+1,ventana_puertos_abiertos[1]+1,18,buff_index_puerto_escucha-1);
+                if(index_puerto_escucha>numero_maximo_filas){index_puerto_escucha=numero_maximo_filas;}
+                for(uint16_t a=0;a<index_puerto_escucha;a++){
+                    mvprintw(ventana_puertos_abiertos[1]+(a+1),ventana_puertos_abiertos[0]+1,"%s",puerto_escucha[a].c_str());
+                }
+                buff_index_puerto_escucha=index_puerto_escucha;
+                //---Refresca la pantalla
+                ventana->refrescar();
+            }
         };break;
         }
         conteo_nodo++;
         conteo_github++;
         conteo_adapools++;
-        if(conteo_nodo>1){
+        if(conteo_nodo>2){
             consulta->actualizar_datos(&puerto_n);
             conteo_nodo=0;
         }
-        if(conteo_github>3600){
+        if(conteo_github>7200){
             if(consulta->github_habilitado()){
                 consulta->github(&version,&estado);
                 //if(consulta->github(&version,&estado)){acceso_github=true;}else{acceso_github=false;}
             }
             conteo_github=0;
         }
-        if(conteo_adapools>600){
+        if(conteo_adapools>1200){
             if(consulta->adapools_habilitado()){
                 consulta->actualizar_adapools();
                 //if(consulta->actualizar_adapools()){acceso_adapools=true;}else{acceso_adapools=false;}
             }
             conteo_adapools=0;
         }
-        sleep(1); //medio seg el refresco
+        usleep(500000); //medio seg el refresco
     }
     
 }
@@ -912,81 +926,81 @@ void categorizar_ips(std::string puertos_abiertos[], uint16_t *index_puertosabie
         }	
     }
     for(uint16_t a=0;a<*index_puertosabiertos;a++){ //a ps[][] se le quitan los puertos_abiertos[] con un "" 
-		for(uint16_t b=0;b<index_ps;b++){
-			if(puertos_abiertos[a]==ps[b][1]){ //se comparan sus puertos
-				ps[b][0]="";
-				ps[b][1]="";
-				ps[b][2]="";
-				}
-			}
-		}
-	for(uint16_t a=0;a<index_pe2;a++){ //a pe2[][] se dejan en "" las ips que coinciden con de ps[][]
-		for(uint16_t b=0;b<index_ps;b++){
-			if(pe2[a][0]==ps[b][0]){ // se comparan sus ips
-				pe2[a][0]="";
-				pe2[a][1]="";
-				}
-			}
-		}
-	for(uint16_t a=0;a<index_pe2;a++){ //se pasa pe2[][] a ip_huerfana_entrada[][]
-		if(pe2[a][0]!=""){
-			ip_huerfana_entrada[*index_ip_huerfana_entrada][0]=pe2[a][0];
-			ip_huerfana_entrada[*index_ip_huerfana_entrada][1]=pe2[a][1];
-			*index_ip_huerfana_entrada+=1;
-			}
-		}
-	
-	for(uint16_t a=0;a<index_pe1;a++){ //a ps[][] se dejan en "" las ips que coinciden con de pe1[][]
-		for(uint16_t b=0;b<index_ps;b++){
-			if(pe1[a][0]==ps[b][0]){ // se comparan sus ips
-				ps[b][0]="";
-				ps[b][1]="";
-				ps[b][2]="";
-				}
-			}
-		}
-	for(uint16_t a=0;a<index_ps;a++){ //se pasa ps[][] a ip_huerfana_salida[][]
-		if(ps[a][0]!=""){
-			ip_huerfana_salida[*index_ip_huerfana_salida][0]=ps[a][0];
-			ip_huerfana_salida[*index_ip_huerfana_salida][1]=ps[a][2];
-			*index_ip_huerfana_salida+=1;
-			}
-		}
-		
-	for(uint16_t a=0;a<index_pe1;a++){ //a pe1[][] se dejan en "" las ips que coinciden con ip_huerfana_entrada[][]
-		for(uint16_t b=0;b<*index_ip_huerfana_entrada;b++){
-			if(pe1[a][0]==ip_huerfana_entrada[b][0]){ // se comparan sus ips
-				pe1[a][0]="";
-				pe1[a][1]="";
-				}
-			}
-		}
-
-	std::string buf_unaip;
-	bool bool_unaip=true;
-	for(uint16_t a=0;a<index_pe1;a++){ //se borran las ips repetidas en pe1[][]
-		if(pe1[a][0]!=""){
-		buf_unaip=pe1[a][0];
-		bool_unaip=true;
-		for(uint16_t b=0;b<index_pe1;b++){
-			if(buf_unaip==pe1[b][0] && bool_unaip){
-				bool_unaip=false;
-				}
-			else if(buf_unaip==pe1[b][0]){
-				pe1[b][0]="";
-				}
-			}
-		}
-	}
-	
-	for(uint16_t a=0;a<index_pe1;a++){ //se pasa pe1[][] a ip_p2p[][]
-		if(pe1[a][0]!=""){
-			ip_p2p[*index_ip_p2p][0]=pe1[a][0];
-			ip_p2p[*index_ip_p2p][1]=pe1[a][1];
-			*index_ip_p2p+=1;
-			}
-		}
-
+        for(uint16_t b=0;b<index_ps;b++){
+            if(puertos_abiertos[a]==ps[b][1]){ //se comparan sus puertos
+                ps[b][0]="";
+                ps[b][1]="";
+                ps[b][2]="";
+            }
+        }
+    }
+    for(uint16_t a=0;a<index_pe2;a++){ //a pe2[][] se dejan en "" las ips que coinciden con de ps[][]
+        for(uint16_t b=0;b<index_ps;b++){
+            if(pe2[a][0]==ps[b][0]){ // se comparan sus ips
+                pe2[a][0]="";
+                pe2[a][1]="";
+            }
+        }
+    }
+    for(uint16_t a=0;a<index_pe2;a++){ //se pasa pe2[][] a ip_huerfana_entrada[][]
+        if(pe2[a][0]!=""){
+            ip_huerfana_entrada[*index_ip_huerfana_entrada][0]=pe2[a][0];
+            ip_huerfana_entrada[*index_ip_huerfana_entrada][1]=pe2[a][1];
+            *index_ip_huerfana_entrada+=1;
+        }
+    }
+    
+    for(uint16_t a=0;a<index_pe1;a++){ //a ps[][] se dejan en "" las ips que coinciden con de pe1[][]
+        for(uint16_t b=0;b<index_ps;b++){
+            if(pe1[a][0]==ps[b][0]){ // se comparan sus ips
+                ps[b][0]="";
+                ps[b][1]="";
+                ps[b][2]="";
+            }
+        }
+    }
+    for(uint16_t a=0;a<index_ps;a++){ //se pasa ps[][] a ip_huerfana_salida[][]
+        if(ps[a][0]!=""){
+            ip_huerfana_salida[*index_ip_huerfana_salida][0]=ps[a][0];
+            ip_huerfana_salida[*index_ip_huerfana_salida][1]=ps[a][2];
+            *index_ip_huerfana_salida+=1;
+        }
+    }
+    
+    for(uint16_t a=0;a<index_pe1;a++){ //a pe1[][] se dejan en "" las ips que coinciden con ip_huerfana_entrada[][]
+        for(uint16_t b=0;b<*index_ip_huerfana_entrada;b++){
+            if(pe1[a][0]==ip_huerfana_entrada[b][0]){ // se comparan sus ips
+                pe1[a][0]="";
+                pe1[a][1]="";
+            }
+        }
+    }
+    
+    std::string buf_unaip;
+    bool bool_unaip=true;
+    for(uint16_t a=0;a<index_pe1;a++){ //se borran las ips repetidas en pe1[][]
+        if(pe1[a][0]!=""){
+            buf_unaip=pe1[a][0];
+            bool_unaip=true;
+            for(uint16_t b=0;b<index_pe1;b++){
+                if(buf_unaip==pe1[b][0] && bool_unaip){
+                    bool_unaip=false;
+                }
+                else if(buf_unaip==pe1[b][0]){
+                    pe1[b][0]="";
+                }
+            }
+        }
+    }
+    
+    for(uint16_t a=0;a<index_pe1;a++){ //se pasa pe1[][] a ip_p2p[][]
+        if(pe1[a][0]!=""){
+            ip_p2p[*index_ip_p2p][0]=pe1[a][0];
+            ip_p2p[*index_ip_p2p][1]=pe1[a][1];
+            *index_ip_p2p+=1;
+        }
+    }
+    
 }
 
 void tiempo_restantes_slot(const uint32_t slot_actual, uint16_t *dia,uint16_t *hora,uint16_t *min,uint16_t *seg){

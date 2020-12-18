@@ -57,6 +57,9 @@ class ngui{
     void crear_ventantaprincipal(std::string titulo,std::string nombre_pie_ventana);
     void crear_ventantaprincipal(std::string titulo,uint atributo_titulo, std::string nombre_pie_ventana,uint atributo_pie_ventana);
     void label(uint32_t x,uint32_t y,const char *texto);
+    void label_uint64(uint32_t x,uint32_t y,const uint64_t s);
+    void label_uint32(uint32_t x,uint32_t y,const uint32_t s);
+    void label_uint16(uint32_t x,uint32_t y,const uint16_t s);
     void label(uint32_t x,uint32_t y,const char *texto,const char *s);
     void label(uint32_t x,uint32_t y,const char *texto,uint atributo);
     void paleta_color(short index,short color_letra, short color_fondo);

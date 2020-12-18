@@ -263,7 +263,24 @@ void ngui::borrar_subventana(uint32_t x,uint32_t y,uint32_t ancho,uint32_t alto)
 }
 }
 
+void ngui::label_uint64(uint32_t x,uint32_t y,const uint64_t s){
+	
+	mvprintw(y,x,"%llu",s);
+	//refresh();
+	}
 
+void ngui::label_uint32(uint32_t x,uint32_t y,const uint32_t s){
+	
+	mvprintw(y,x,"%lu",s);
+	//refresh();
+	}
+
+void ngui::label_uint16(uint32_t x,uint32_t y,const uint16_t s){
+	
+	mvprintw(y,x,"%u",s);
+	//refresh();
+	}
+	
 void ngui::label(uint32_t x,uint32_t y,const char *texto){
 	mvprintw(y,x,texto);
 	//refresh();
