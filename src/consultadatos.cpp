@@ -285,7 +285,9 @@ bool consultadatos::actualizar_datos(const uint32_t *puerto){
 
 bool consultadatos::version_nodo(std::string *nversion){
     buff=url_cardanonode;
-    if(buff==""){
+    if(buff.length()==0){
+		return false;
+	}else if(buff[0]==' '){
         return false;
     }
     uint32buff=buff.length();
@@ -296,17 +298,13 @@ bool consultadatos::version_nodo(std::string *nversion){
         buff.append("/cardano-node version");
     }
     
-    if(std::string(exec(buff)).find("bash:")!=std::string::npos){
-        return false;
-    }else{
-        isbuffer=std::istringstream(exec(buff));
-        buff.clear();
-        getline(isbuffer,buff); 
-        size_t t=buff.find(" ");
-        linea=buff.substr(t+1,std::string::npos); 
-        t=linea.find(" ");
-        linea=linea.substr(0,t); 
-    }
+    isbuffer=std::istringstream(exec(buff));
+    buff.clear();
+    getline(isbuffer,buff); 
+    size_t t=buff.find(" ");
+    linea=buff.substr(t+1,std::string::npos); 
+    t=linea.find(" ");
+    linea=linea.substr(0,t); 
     *nversion=linea;
     return true;
 }

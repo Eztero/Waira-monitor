@@ -218,7 +218,7 @@ void cargar_ui(){
         }
         
         ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+1,"Memory Used: ");
-        ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"CPU: ");
+        ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"CPU:");
         
         ventana->label(ventana_trx[0]+1,ventana_trx[1]+1,"In mempool: ");
         ventana->label((ventana_trx[0]+ventana_trx[2]-11),ventana_trx[1]+1,"Max: ");
@@ -249,13 +249,15 @@ void cargar_ui(){
         ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
     }else{
         if(consulta->github_habilitado()){
+			//Crea ventana tag
+			ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
 			ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,"Can't be accessed to Github");
 			ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
         }
         else{
             //Crea ventana tag
             ventana_tagversion[3]=4;
-			ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
+			ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version");
 			ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Local");
         }
         ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
@@ -273,6 +275,9 @@ void cargar_ui(){
         ventana->label((ventana_stake[0]+ventana_stake[2]*0.5-6),ventana_stake[1]+6,"Saturation:");   
     }else{
         if(consulta->adapools_habilitado()){
+			//Se crean las ventana de stake y mined
+			ventana->crear_subventana(ventana_stake[0],ventana_stake[1],ventana_stake[2],ventana_stake[3],"Stake", "Consulted to adapools");
+		    ventana->crear_subventana(ventana_mined[0],ventana_mined[1],ventana_mined[2],ventana_mined[3],"Forge");
             ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Can't be accessed to Adapools");
         }
         else{
@@ -391,7 +396,7 @@ void cargar_ui(){
                     }
                     
                     ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+1,"Memory Used: ");
-                    ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"CPU: ");
+                    ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"CPU:");
                     
                     ventana->label(ventana_trx[0]+1,ventana_trx[1]+1,"In mempool: ");
                     ventana->label((ventana_trx[0]+ventana_trx[2]-11),ventana_trx[1]+1,"Max: ");
@@ -413,6 +418,7 @@ void cargar_ui(){
                     ventana->label(ventana_mined[0]+1,ventana_mined[1]+2,"Can't be accessed");
                 }
                 if(acceso_github){
+					//Crea ventana tag
 					ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
                     ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
                     ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+1,"status");
@@ -420,6 +426,8 @@ void cargar_ui(){
                     ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
                 }else{
                     if(consulta->github_habilitado()){
+						//Crea ventana tag
+						ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
 						ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,"Can't be accessed to Github");
 						ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
                         
@@ -427,7 +435,7 @@ void cargar_ui(){
                     else{
 					//Crea ventana tag
 					ventana_tagversion[3]=4;
-					ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");                    
+					ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version");                    
 					ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Local");
 					}
 					ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
@@ -444,6 +452,9 @@ void cargar_ui(){
                     ventana->label((ventana_stake[0]+ventana_stake[2]*0.5-6),ventana_stake[1]+6,"Saturation:");   
                 }else{
                     if(consulta->adapools_habilitado()){
+						//Se crean las ventana de stake y mined
+					ventana->crear_subventana(ventana_stake[0],ventana_stake[1],ventana_stake[2],ventana_stake[3],"Stake", "Consulted to adapools");
+					ventana->crear_subventana(ventana_mined[0],ventana_mined[1],ventana_mined[2],ventana_mined[3],"Forge");
                         ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Can't be accessed to Adapools");
                     }else{
 						ventana_mined[1]=1;
@@ -472,7 +483,6 @@ void cargar_ui(){
                 }else{
                     ventana->crear_subventana(ventana_estadisticapool_node[0],ventana_estadisticapool_node[1],ventana_estadisticapool_node[2],ventana_estadisticapool_node[3],"Producer");
                 }
-                ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
                 ventana->crear_subventana(ventana_memoria[0],ventana_memoria[1],ventana_memoria[2],ventana_memoria[3],"Memory");
                 ventana->crear_subventana(ventana_trx[0],ventana_trx[1],ventana_trx[2],ventana_trx[3],"Transactions");
                 ventana->crear_subventana(ventana_peer[0],ventana_peer[1],ventana_peer[2],ventana_peer[3],"Peers");
@@ -496,7 +506,7 @@ void cargar_ui(){
                     }
                     
                     ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+1,"Memory Used: ");
-                    ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"CPU: ");
+                    ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"CPU:");
                     
                     ventana->label(ventana_trx[0]+1,ventana_trx[1]+1,"In mempool: ");
                     ventana->label((ventana_trx[0]+ventana_trx[2]-11),ventana_trx[1]+1,"Max: ");
@@ -519,19 +529,23 @@ void cargar_ui(){
                     ventana->label(ventana_mined[0]+1,ventana_mined[1]+2,"Can't be accessed");
                 }
                 if(acceso_github){
+					//Crea ventana tag
+					ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
                     ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
                     ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+1,"status");
                     ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Github");
                     ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
                 }else{
                     if(consulta->github_habilitado()){
+						//Crea ventana tag
+						ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
                         ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,"Can't be accessed to Github");
                         ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
                     }
                     else{
 						//Crea ventana tag
 						ventana_tagversion[3]=4;
-						ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
+						ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version");
 						ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Local");
                     }
                     ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
@@ -548,6 +562,9 @@ void cargar_ui(){
                 }
                 else{
                     if(consulta->adapools_habilitado()){
+					//Se crean las ventana de stake y mined
+					ventana->crear_subventana(ventana_stake[0],ventana_stake[1],ventana_stake[2],ventana_stake[3],"Stake", "Consulted to adapools");
+					ventana->crear_subventana(ventana_mined[0],ventana_mined[1],ventana_mined[2],ventana_mined[3],"Forge");
                         ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Can't be accessed to Adapools");
                     }else{
 						ventana_mined[1]=1;
@@ -665,10 +682,10 @@ void cargar_ui(){
                     espacios[memoria]=(espacios[memoria])+3;
                     //ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"Cpu: ");
                     ventana->slider_horizontal(ventana_memoria[0]+5,ventana_memoria[1]+2,ventana_memoria[2]-11,100,consulta->ticks_porciento());
-                    ventana->crear_linea_horizontal(ventana_memoria[0]+(ventana_memoria[2]-6),ventana_memoria[1]+2,espacios[cpu],' ');
-                    ventana->label_uint16(ventana_memoria[0]+(ventana_memoria[2]-6),ventana_memoria[1]+2,consulta->ticks_porciento());
+                    ventana->crear_linea_horizontal(ventana_memoria[0]+(ventana_memoria[2]-5),ventana_memoria[1]+2,espacios[cpu],' ');
+                    ventana->label_uint16(ventana_memoria[0]+(ventana_memoria[2]-5),ventana_memoria[1]+2,consulta->ticks_porciento());
                     espacios[cpu]=std::to_string(consulta->ticks_porciento()).length();
-                    ventana->label(ventana_memoria[0]+(ventana_memoria[2]-6)+espacios[cpu],ventana_memoria[1]+2,"\uFF05");
+                    ventana->label(ventana_memoria[0]+(ventana_memoria[2]-5)+espacios[cpu],ventana_memoria[1]+2,"\uFF05");
                     espacios[cpu]=(espacios[cpu])+1;
                     
                     txmin=consulta->transacciones_mempool();
@@ -780,7 +797,11 @@ void cargar_ui(){
                     ventana->crear_linea_horizontal(ventana_tagversion[2]*0.3,ventana_tagversion[1]+3,espacios[esp_nversion],' ');
                     ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+3,nversion.c_str());
                     espacios[esp_nversion]=nversion.length();
-                    if(version==nversion || (version!=nversion && estado!="release")){
+                    if(nversion.length()==0){
+						ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+3,"         ");	
+                        ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+3,"Error", COLOR_PAIR(6) | A_BOLD | A_BLINK);
+						}
+                    else if(version==nversion || (version!=nversion && estado!="release")){
                         ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+3,"         ");	
                         ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+3,"updated",COLOR_PAIR(4) | A_BOLD);	
                     }else{
@@ -790,9 +811,14 @@ void cargar_ui(){
 				}else{
 					ventana->crear_linea_horizontal(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,espacios[esp_nversion],' ');
                     ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,nversion.c_str());
+                    if(nversion.length()==0){
+						ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+2,"         ");	
+                        ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+2,"Error", COLOR_PAIR(6) | A_BOLD | A_BLINK);
+						}else{
                     ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+2,"Local",COLOR_PAIR(4) | A_BOLD);
+                    }
 					}	                    
-                }else{ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+3,"Query error");}
+                }else{ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+3,"Disable");}
                 
                 
                 
