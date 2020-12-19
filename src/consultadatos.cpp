@@ -9,9 +9,7 @@ consultadatos::consultadatos(){
     density=0;
     density_str="0";
     url_cardanonode="";
-    url_socket="";
     reward_balance=0;
-    stakeaddress="";
     pool_id="";
     enable_github=false;
     enable_adapools=false;
@@ -313,49 +311,6 @@ bool consultadatos::version_nodo(std::string *nversion){
     return true;
 }
 
-bool consultadatos::cargar_datosreward(){ //En Desarrollo
-    buff=url_cardanonode;
-    if(buff==""){
-        return false;
-    }
-    uint32buff=buff.length();
-    if(buff[uint32buff-1]=='/'){
-        buff.append("cardano-cli");
-    }
-    else{
-        buff.append("/cardano-cli");
-    }
-    buff.append(" shelley query stake-address-info --address ");
-    buff.append(stakeaddress);
-    buff.append(" --cardano-mode --mainnet");
-    if(url_socket==""){
-        return false;
-    }else{
-        linea="export CARDANO_NODE_SOCKET_PATH=";
-        linea.append(url_socket);
-        linea.append(" && ");
-        linea.append(buff);
-    }
-    buff=exec(linea);
-    if(buff.find("bash:")!=std::string::npos){
-        return false;
-    }else{
-		if(buff[0]=='['){
-        json j = json::parse(buff); //agregar un sistema que verifique el "[" al inicio
-        
-        auto q_estado = j.find("rewardAccountBalance");   
-        if((q_estado != j.end())){
-            reward_balance=*q_estado;
-        }else{
-            return false;
-        }
-	}
-	else{
-		return false;}
-    }
-    return true;
-}
-
 uint32_t consultadatos::epoca(){
     return datoscli[cardano_node_ChainDB_metrics_epoch_int];
 }
@@ -532,31 +487,23 @@ bool consultadatos::cargar_configuracion(ngui *ventana, const double ventanapos_
         if(q_estado != rconfig.end()){url_cardanonode=*q_estado;if(url_cardanonode!=""){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+5,"* Path to cardano-node and cardano-cli found",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+5,"* Path to cardano-node and cardano-cli is empty",COLOR_PAIR(3));}}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+5,"* Path to cardano-node and cardano-cli not found",COLOR_PAIR(3));}
         ventana->refrescar();
         usleep(100000);
-        q_estado = rconfig.find("Socket_path"); 
-        if(q_estado != rconfig.end()){url_socket=*q_estado;if(url_socket!=""){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+6,"* Path to soket.node found",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+6,"* Path to soket.node is empty",COLOR_PAIR(3));}}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+6,"* Path to soket.node not found",COLOR_PAIR(3));}
-        ventana->refrescar();
-        usleep(100000);
         q_estado = rconfig.find("Pool_id"); 
-        if(q_estado != rconfig.end()){pool_id=*q_estado;if(pool_id!=""){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+7,"* Pool id found",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+7,"* Pool Id is empty",COLOR_PAIR(3));}}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+7,"* Pool Id not found",COLOR_PAIR(3));}
-        ventana->refrescar();
-        usleep(100000);
-        q_estado = rconfig.find("Stake_address"); 
-        if(q_estado != rconfig.end()){stakeaddress=*q_estado;if(pool_id!=""){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+8,"* Stake address found",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+8,"* Stake address is empty",COLOR_PAIR(3));}}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+8,"* Stake address not found",COLOR_PAIR(3));}
+        if(q_estado != rconfig.end()){pool_id=*q_estado;if(pool_id!=""){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+6,"* Pool id found",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+6,"* Pool Id is empty",COLOR_PAIR(3));}}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+6,"* Pool Id not found",COLOR_PAIR(3));}
         ventana->refrescar();
         usleep(100000);
         q_estado = rconfig.find("Query_github"); 
-        if(q_estado != rconfig.end()){enable_github=*q_estado;if(enable_github){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+9,"* Queries to Github are enable",COLOR_PAIR(3));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+9,"* Queries to Github are disable",COLOR_PAIR(3));}}else{enable_github=false;ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+9,"* Queries to Github are disable",COLOR_PAIR(3));}
+        if(q_estado != rconfig.end()){enable_github=*q_estado;if(enable_github){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+7,"* Queries to Github are enable",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+7,"* Queries to Github are disable",COLOR_PAIR(3));}}else{enable_github=false;ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+7,"* Queries to Github are disable",COLOR_PAIR(3));}
         ventana->refrescar();
         usleep(100000);
         q_estado = rconfig.find("Query_adapools"); 
-        if(q_estado != rconfig.end()){enable_adapools=*q_estado;if(enable_adapools){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+10,"* Queries to Adapools are enable",COLOR_PAIR(3));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+10,"* Queries to Adapools are disable",COLOR_PAIR(3));}}else{enable_adapools=false;ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+10,"* Queries to Adapools are disable",COLOR_PAIR(3));}
+        if(q_estado != rconfig.end()){enable_adapools=*q_estado;if(enable_adapools){ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+8,"* Queries to Adapools are enable",COLOR_PAIR(4));}else{ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+8,"* Queries to Adapools are disable",COLOR_PAIR(3));}}else{enable_adapools=false;ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+8,"* Queries to Adapools are disable",COLOR_PAIR(3));}
         usleep(100000);
         ventana->refrescar();
-        ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+11,"* Configuration Loaded",COLOR_PAIR(4) | A_BOLD);
+        ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+10,"* Configuration Loaded",COLOR_PAIR(4) | A_BOLD);
         ventana->refrescar();
         usleep(100000);
         if(!haypuertonode){
-            ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+12,"* Have not Prometheus ports",COLOR_PAIR(1) | A_BOLD | A_BLINK);
+            ventana->label(ventanapos_xyanchoalto[0]+2,ventanapos_xyanchoalto[1]+11,"* Have not Prometheus ports",COLOR_PAIR(1) | A_BOLD | A_BLINK);
             ventana->refrescar();
             return false;
         }else if(!haynombre){

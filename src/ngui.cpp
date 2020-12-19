@@ -21,7 +21,7 @@ ngui::ngui(uint8_t enable_cursor){
 
 ngui::~ngui(){
 	endwin();
-	std::cout<<"Close Windows"<<std::endl;
+	std::cout<<"Closing WairaMonitor"<<std::endl;
 	}
 
 void ngui::crear_ventantaprincipal(std::string titulo, std::string nombre_pie_ventana){

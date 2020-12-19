@@ -47,7 +47,6 @@ class consultadatos{
 	uint32_t bloques_asignados();
 	uint32_t bloques_perdidos();
 	uint16_t ticks_porciento();
-	bool cargar_datosreward(); //consulta la cantidad de reward del pool
 	float densidad();
 	std::string densidad_str();
 	std::string reward();
@@ -92,7 +91,7 @@ class consultadatos{
     uint32_t uint32buff,ticks_a,ticks_b;
 	uint16_t posicion,port_node,cantidad_ip_in=0;
 	bool haypuertorelay, haypuertonode, enable_github,enable_adapools;
-    std::string linea,buff,respuesta_url,ip_in[100],puerto_in[100],ips_out[100],puertos_out[100],poolname,url_socket,url_cardanonode,stakeaddress,pool_id,active_stake,total_stake,pledged,delegators,buff_error, density_str;
+    std::string linea,buff,respuesta_url,ip_in[100],puerto_in[100],ips_out[100],puertos_out[100],poolname,url_cardanonode,pool_id,active_stake,total_stake,pledged,delegators,buff_error, density_str;
     CURL *curl;                        //parametros de configiracion curl
     CURLcode res; 
 	

@@ -195,11 +195,8 @@ void cargar_ui(){
         ventana->crear_subventana(ventana_estadisticapool_node[0],ventana_estadisticapool_node[1],ventana_estadisticapool_node[2],ventana_estadisticapool_node[3],"Producer");
     }
     //Se crean las ventanas
-    ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
     ventana->crear_subventana(ventana_memoria[0],ventana_memoria[1],ventana_memoria[2],ventana_memoria[3],"Memory");
     ventana->crear_subventana(ventana_trx[0],ventana_trx[1],ventana_trx[2],ventana_trx[3],"Transactions");
-    ventana->crear_subventana(ventana_stake[0],ventana_stake[1],ventana_stake[2],ventana_stake[3],"Stake", "Consulted to adapools");
-    ventana->crear_subventana(ventana_mined[0],ventana_mined[1],ventana_mined[2],ventana_mined[3],"Forge");
     ventana->crear_subventana(ventana_peer[0],ventana_peer[1],ventana_peer[2],ventana_peer[3],"Peers");
     ventana->crear_subventana(ventana_blockchain[0],ventana_blockchain[1],ventana_blockchain[2],ventana_blockchain[3],"Blockchain");
     
@@ -221,7 +218,7 @@ void cargar_ui(){
         }
         
         ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+1,"Memory Used: ");
-        ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"Cpu: ");
+        ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"CPU: ");
         
         ventana->label(ventana_trx[0]+1,ventana_trx[1]+1,"In mempool: ");
         ventana->label((ventana_trx[0]+ventana_trx[2]-11),ventana_trx[1]+1,"Max: ");
@@ -232,9 +229,6 @@ void cargar_ui(){
         ventana->label(ventana_blockchain[0]+1,ventana_blockchain[1]+1,"Density: ");
         ventana->label(ventana_blockchain[0]+1,ventana_blockchain[1]+2,"Fork: ");
         
-        ventana->label(ventana_mined[0]+1,ventana_mined[1]+1,"Slots lead: ");
-        ventana->label(ventana_mined[0]+1,ventana_mined[1]+2,"Blocks minted: ");
-        ventana->label(ventana_mined[0]+1,ventana_mined[1]+3,"Slots missed: ");
         
         
     }else{
@@ -247,35 +241,49 @@ void cargar_ui(){
         ventana->label(ventana_mined[0]+1,ventana_mined[1]+2,"Can't be accessed");
     }
     if(acceso_github){
+		//Crea ventana tag
+		ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
         ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
         ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+1,"status");
         ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Github");
         ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
     }else{
-        ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
-        ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+1,"status");	
-        ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
-        if(!consulta->github_habilitado()){
-            ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Queries to Github are disable");
+        if(consulta->github_habilitado()){
+			ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,"Can't be accessed to Github");
+			ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
         }
         else{
-            ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,"Can't be accessed to Github");
-        }	
+            //Crea ventana tag
+            ventana_tagversion[3]=4;
+			ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
+			ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Local");
+        }
+        ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
+        ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+1,"status");	
+        	
     }
     if(acceso_adapools){
+		//Se crean las ventana de stake y mined
+		ventana->crear_subventana(ventana_stake[0],ventana_stake[1],ventana_stake[2],ventana_stake[3],"Stake", "Consulted to adapools");
+		ventana->crear_subventana(ventana_mined[0],ventana_mined[1],ventana_mined[2],ventana_mined[3],"Forge");
         ventana->label(ventana_stake[0]+1,ventana_stake[1]+1,"Pledge: ");
         ventana->label(ventana_stake[0]+1,ventana_stake[1]+2,"Total Stake: ");
         ventana->label(ventana_stake[0]+1,ventana_stake[1]+3,"Live Stake: ");
         ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Delegator: ");
         ventana->label((ventana_stake[0]+ventana_stake[2]*0.5-6),ventana_stake[1]+6,"Saturation:");   
     }else{
-        if(!consulta->adapools_habilitado()){
-            ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Queries to Adapools are disable");
-        }
-        else{
+        if(consulta->adapools_habilitado()){
             ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Can't be accessed to Adapools");
         }
+        else{
+			ventana_mined[1]=1;
+			ventana->crear_subventana(ventana_mined[0],ventana_mined[1],ventana_mined[2],ventana_mined[3],"Forge");
+			}
     }
+		//despues de crear las ventana stake y mined, asigno las letras
+        ventana->label(ventana_mined[0]+1,ventana_mined[1]+1,"Slots lead: ");
+        ventana->label(ventana_mined[0]+1,ventana_mined[1]+2,"Blocks minted: ");
+        ventana->label(ventana_mined[0]+1,ventana_mined[1]+3,"Slots missed: ");
     
     ventana->refrescar();
     
@@ -360,11 +368,8 @@ void cargar_ui(){
                 }else{
                     ventana->crear_subventana(ventana_estadisticapool_node[0],ventana_estadisticapool_node[1],ventana_estadisticapool_node[2],ventana_estadisticapool_node[3],"Producer");
                 }
-                ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
                 ventana->crear_subventana(ventana_memoria[0],ventana_memoria[1],ventana_memoria[2],ventana_memoria[3],"Memory");
                 ventana->crear_subventana(ventana_trx[0],ventana_trx[1],ventana_trx[2],ventana_trx[3],"Transactions");
-                ventana->crear_subventana(ventana_stake[0],ventana_stake[1],ventana_stake[2],ventana_stake[3],"Stake", "Consulted to adapools");
-                ventana->crear_subventana(ventana_mined[0],ventana_mined[1],ventana_mined[2],ventana_mined[3],"Forge");
                 ventana->crear_subventana(ventana_peer[0],ventana_peer[1],ventana_peer[2],ventana_peer[3],"Peers");
                 ventana->crear_subventana(ventana_blockchain[0],ventana_blockchain[1],ventana_blockchain[2],ventana_blockchain[3],"Blockchain");
                 
@@ -386,7 +391,7 @@ void cargar_ui(){
                     }
                     
                     ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+1,"Memory Used: ");
-                    ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"Cpu: ");
+                    ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"CPU: ");
                     
                     ventana->label(ventana_trx[0]+1,ventana_trx[1]+1,"In mempool: ");
                     ventana->label((ventana_trx[0]+ventana_trx[2]-11),ventana_trx[1]+1,"Max: ");
@@ -396,10 +401,6 @@ void cargar_ui(){
                     
                     ventana->label(ventana_blockchain[0]+1,ventana_blockchain[1]+1,"Density: ");
                     ventana->label(ventana_blockchain[0]+1,ventana_blockchain[1]+2,"Fork: ");
-                    
-                    ventana->label(ventana_mined[0]+1,ventana_mined[1]+1,"Slots lead: ");
-                    ventana->label(ventana_mined[0]+1,ventana_mined[1]+2,"Blocks minted: ");
-                    ventana->label(ventana_mined[0]+1,ventana_mined[1]+3,"Slots missed: ");
                     
                     
                 }else{
@@ -412,35 +413,47 @@ void cargar_ui(){
                     ventana->label(ventana_mined[0]+1,ventana_mined[1]+2,"Can't be accessed");
                 }
                 if(acceso_github){
+					ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
                     ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
                     ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+1,"status");
                     ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Github");
                     ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
                 }else{
-                    ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
-                    ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+1,"status");	
-                    ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
-                    if(!consulta->github_habilitado()){
-                        ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Queries to Github are disable");
+                    if(consulta->github_habilitado()){
+						ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,"Can't be accessed to Github");
+						ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
+                        
                     }
                     else{
-                        ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,"Can't be accessed to Github");
-                    }	
+					//Crea ventana tag
+					ventana_tagversion[3]=4;
+					ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");                    
+					ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Local");
+					}
+					ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
+                    ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+1,"status");	
+                    	
                 }
                 if(acceso_adapools){
+					ventana->crear_subventana(ventana_stake[0],ventana_stake[1],ventana_stake[2],ventana_stake[3],"Stake", "Consulted to adapools");
+					ventana->crear_subventana(ventana_mined[0],ventana_mined[1],ventana_mined[2],ventana_mined[3],"Forge");
                     ventana->label(ventana_stake[0]+1,ventana_stake[1]+1,"Pledge: ");
                     ventana->label(ventana_stake[0]+1,ventana_stake[1]+2,"Total Stake: ");
                     ventana->label(ventana_stake[0]+1,ventana_stake[1]+3,"Live Stake: ");
                     ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Delegator: ");
                     ventana->label((ventana_stake[0]+ventana_stake[2]*0.5-6),ventana_stake[1]+6,"Saturation:");   
                 }else{
-                    if(!consulta->adapools_habilitado()){
-                        ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Queries to Adapools are disable");
-                    }
-                    else{
+                    if(consulta->adapools_habilitado()){
                         ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Can't be accessed to Adapools");
-                    }
+                    }else{
+						ventana_mined[1]=1;
+						ventana->crear_subventana(ventana_mined[0],ventana_mined[1],ventana_mined[2],ventana_mined[3],"Forge");
+						}
                 }
+					//Despues de crear las ventanas stake y mined asigno las letras
+                    ventana->label(ventana_mined[0]+1,ventana_mined[1]+1,"Slots lead: ");
+                    ventana->label(ventana_mined[0]+1,ventana_mined[1]+2,"Blocks minted: ");
+                    ventana->label(ventana_mined[0]+1,ventana_mined[1]+3,"Slots missed: ");
                 //switchmain=true;
                 //switchpeer=false;
                 //switchabout=false;
@@ -462,8 +475,6 @@ void cargar_ui(){
                 ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
                 ventana->crear_subventana(ventana_memoria[0],ventana_memoria[1],ventana_memoria[2],ventana_memoria[3],"Memory");
                 ventana->crear_subventana(ventana_trx[0],ventana_trx[1],ventana_trx[2],ventana_trx[3],"Transactions");
-                ventana->crear_subventana(ventana_stake[0],ventana_stake[1],ventana_stake[2],ventana_stake[3],"Stake", "Consulted to adapools");
-                ventana->crear_subventana(ventana_mined[0],ventana_mined[1],ventana_mined[2],ventana_mined[3],"Forge");
                 ventana->crear_subventana(ventana_peer[0],ventana_peer[1],ventana_peer[2],ventana_peer[3],"Peers");
                 ventana->crear_subventana(ventana_blockchain[0],ventana_blockchain[1],ventana_blockchain[2],ventana_blockchain[3],"Blockchain");
                 
@@ -485,7 +496,7 @@ void cargar_ui(){
                     }
                     
                     ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+1,"Memory Used: ");
-                    ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"Cpu: ");
+                    ventana->label(ventana_memoria[0]+1,ventana_memoria[1]+2,"CPU: ");
                     
                     ventana->label(ventana_trx[0]+1,ventana_trx[1]+1,"In mempool: ");
                     ventana->label((ventana_trx[0]+ventana_trx[2]-11),ventana_trx[1]+1,"Max: ");
@@ -496,9 +507,6 @@ void cargar_ui(){
                     ventana->label(ventana_blockchain[0]+1,ventana_blockchain[1]+1,"Density: ");
                     ventana->label(ventana_blockchain[0]+1,ventana_blockchain[1]+2,"Fork: ");
                     
-                    ventana->label(ventana_mined[0]+1,ventana_mined[1]+1,"Slots lead: ");
-                    ventana->label(ventana_mined[0]+1,ventana_mined[1]+2,"Blocks minted: ");
-                    ventana->label(ventana_mined[0]+1,ventana_mined[1]+3,"Slots missed: ");
                     
                     
                 }else{
@@ -516,18 +524,22 @@ void cargar_ui(){
                     ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Github");
                     ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
                 }else{
-                    ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
-                    ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+1,"status");	
-                    ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
-                    if(!consulta->github_habilitado()){
-                        ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Queries to Github are disable");
+                    if(consulta->github_habilitado()){
+                        ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,"Can't be accessed to Github");
+                        ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
                     }
                     else{
-                        ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,"Can't be accessed to Github");
-                    }	
+						//Crea ventana tag
+						ventana_tagversion[3]=4;
+						ventana->crear_subventana(ventana_tagversion[0],ventana_tagversion[1],ventana_tagversion[2],ventana_tagversion[3],"Tag version","Consulted to github");
+						ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+2,"Local");
+                    }
+                    ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+1,"version");
+                    ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+1,"status");	
                 }
                 if(acceso_adapools){
-                    ventana->crear_subventana(ventana_stake[0],ventana_stake[1],ventana_stake[2],ventana_stake[3],"Stake", "Consulted to adapools");
+					ventana->crear_subventana(ventana_stake[0],ventana_stake[1],ventana_stake[2],ventana_stake[3],"Stake", "Consulted to adapools");
+                    ventana->crear_subventana(ventana_mined[0],ventana_mined[1],ventana_mined[2],ventana_mined[3],"Forge");
                     ventana->label(ventana_stake[0]+1,ventana_stake[1]+1,"Pledge: ");
                     ventana->label(ventana_stake[0]+1,ventana_stake[1]+2,"Total Stake: ");
                     ventana->label(ventana_stake[0]+1,ventana_stake[1]+3,"Live Stake: ");
@@ -535,13 +547,17 @@ void cargar_ui(){
                     ventana->label((ventana_stake[0]+ventana_stake[2]*0.5-6),ventana_stake[1]+6,"Saturation:");   
                 }
                 else{
-                    if(!consulta->adapools_habilitado()){
-                        ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Queries to Adapools are disable");
-                    }
-                    else{
+                    if(consulta->adapools_habilitado()){
                         ventana->label(ventana_stake[0]+1,ventana_stake[1]+4,"Can't be accessed to Adapools");
-                    }
+                    }else{
+						ventana_mined[1]=1;
+						ventana->crear_subventana(ventana_mined[0],ventana_mined[1],ventana_mined[2],ventana_mined[3],"Forge");
+					}
                 }
+                //Despues de crear las ventana stake y mined,asigno las letras
+                    ventana->label(ventana_mined[0]+1,ventana_mined[1]+1,"Slots lead: ");
+                    ventana->label(ventana_mined[0]+1,ventana_mined[1]+2,"Blocks minted: ");
+                    ventana->label(ventana_mined[0]+1,ventana_mined[1]+3,"Slots missed: ");
                 switchmain=true;
                 switchpeer=false;
                 switchabout=false;
@@ -759,6 +775,7 @@ void cargar_ui(){
                 
                 
                 if(acceso_versionnodo){
+					if(consulta->github_habilitado()){
                     //ventana->label(ventana_tagversion[0]+1,ventana_tagversion[1]+3,"Local");
                     ventana->crear_linea_horizontal(ventana_tagversion[2]*0.3,ventana_tagversion[1]+3,espacios[esp_nversion],' ');
                     ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+3,nversion.c_str());
@@ -769,8 +786,12 @@ void cargar_ui(){
                     }else{
                         ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+3,"         ");	
                         ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+3,"outdated", COLOR_PAIR(6) | A_BOLD | A_BLINK);
-                    }	
-                    
+                    }
+				}else{
+					ventana->crear_linea_horizontal(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,espacios[esp_nversion],' ');
+                    ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+2,nversion.c_str());
+                    ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+2,"Local",COLOR_PAIR(4) | A_BOLD);
+					}	                    
                 }else{ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+3,"Query error");}
                 
                 
