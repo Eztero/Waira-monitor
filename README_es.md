@@ -86,4 +86,7 @@ Una vez configurado tu archivo de configuración, puedes dejar tu ejecutable jun
 	./wairamonitor
 
 ***
+
+Si quieres apoyar mi trabajo :)
+
 [![](https://raw.githubusercontent.com/Eztero/donacion/master/imagen/donate_cardano.png)](https://raw.githubusercontent.com/Eztero/donacion/master/texto/donate_cardano.txt)

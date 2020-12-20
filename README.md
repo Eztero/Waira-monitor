@@ -90,5 +90,8 @@ Once your configuration file is configured, you can leave your executable togeth
 
 
 ***
+
+If you want to support my work :)
+
 [![](https://raw.githubusercontent.com/Eztero/donacion/master/imagen/donate_cardano.png)](https://raw.githubusercontent.com/Eztero/donacion/master/texto/donate_cardano.txt)
 
