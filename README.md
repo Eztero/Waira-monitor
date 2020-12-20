@@ -90,5 +90,5 @@ Once your configuration file is configured, you can leave your executable togeth
 
 
 ***
+[![](https://github.com/Eztero/Waira-monitor/blob/master/images/donate_cardano.png)](https://raw.githubusercontent.com/Eztero/Waira-monitor/master/images/address.txt)
 
- [ ![](./images/donate_cardano.png)] (https://raw.githubusercontent.com/Eztero/Waira-monitor/master/images/address.txt)
