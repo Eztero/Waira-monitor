@@ -84,3 +84,6 @@ Como puedes ver el puerto para Prometheus en este ejemplo, se encuentra corriend
 Una vez configurado tu archivo de configuración, puedes dejar tu ejecutable junto con su archivo de configuración donde desees, luego para ejecutarlo debes tener tu terminal en la misma ruta de tu ejecutable y hacer un:
 
 	./wairamonitor
+
+***
+[![](https://github.com/Eztero/donacion/blob/master/imagen/donate_cardano.png)](https://raw.githubusercontent.com/Eztero/donacion/master/texto/donate_cardano.txt?token=AI4HLE6PMEHQ3CEGYA5IPBC737N4I)
