@@ -86,3 +86,9 @@ As you can see the port for Prometheus in this example, it is running by default
 Once your configuration file is configured, you can leave your executable together with its configuration file wherever you want, then to run it you must have your terminal in the same path as your executable and do a:
 
     ./wairamonitor
+
+
+
+***
+
+ [ ![](./images/donate_cardano.png)] (https://raw.githubusercontent.com/Eztero/Waira-monitor/master/images/address.txt)
