@@ -65,6 +65,9 @@ el archivo de configuración "wairamonitor.conf" obedece a esta configuración.
 * Query_github: Habilita (true) o deshabilita (false) las consultas a Github.
 * Query_adapools: Habilita (true) o deshabilita (false) las consultas a adapools.org.
 
+>Como medida de seguridad, se recomienda que las consultas solo estén habilitadas en el nodo Rele, ya que estas IP son de conocimiento público.
+Si habilita esto en el nodo productor, su IP podría verse comprometida en los servidores donde se realizan las consultas.
+
 En el archivo de configuración de tu nodo "mainnet-config.json" deberás establecer en "true" el "TraceBlockFetchDecisions" de esta manera podrás visualizar la estadística de los peer.
 
 	"TraceBlockFetchDecisions": true,

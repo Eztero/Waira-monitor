@@ -66,7 +66,10 @@ the configuration file "wairamonitor.conf" obeys these settings.
 * Prometheus_port: Connect to your prometheus port of your cardano-node, by default it is always 12798.
 * Query_github: Enable (true) or disable (false) queries to Github.
 * Query_adapools: Enables (true) or disables (false) queries to adapools.org.
-   
+
+>As a security measure, it is recommended that the queries are only enabled on the Relay node, since these IPs are public knowledge.
+If you enable this  on the Producer node, your IP could be compromised on the servers where the queries are made.
+
 In the configuration file of your node "mainnet-config.json" you must set the "TraceBlockFetchDecisions" to "true" in this way you can view the statistics of the peers.
 
 	"TraceBlockFetchDecisions": true,
