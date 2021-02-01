@@ -66,22 +66,22 @@ class consultadatos{
 	void clean_array(uint64_t datoscli[]);
 	static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
 	    enum estadistica{  //actualmente tiene 18 No olvidar editar TAMANO_ARRAY_DATOS
-        cardano_node_ChainDB_metrics_epoch_int,  //EPOCA
-        cardano_node_ChainDB_metrics_slotInEpoch_int, //SLOT
-        cardano_node_ChainDB_metrics_slotNum_int, //TOTAL SLOTS
-        cardano_node_Forge_metrics_currentKESPeriod_int, //PERIODO KES ACTUAL
-        cardano_node_Forge_metrics_remainingKESPeriods_int, //PERIODOS KES RESTANTES PARA CADUCAR CERTIFICADO
-        cardano_node_Forge_metrics_operationalCertificateStartKESPeriod_int, //PERIODO KES CREACION CERTIFICADO
-        cardano_node_Forge_metrics_operationalCertificateExpiryKESPeriod_int, //PERIODO KES EXPIRACION CERTIFICADO
+        cardano_node_metrics_epoch_int,  //EPOCA
+        cardano_node_metrics_slotInEpoch_int, //SLOT
+        cardano_node_metrics_slotNum_int, //TOTAL SLOTS
+        cardano_node_metrics_currentKESPeriod_int, //PERIODO KES ACTUAL
+        cardano_node_metrics_remainingKESPeriods_int, //PERIODOS KES RESTANTES PARA CADUCAR CERTIFICADO
+        cardano_node_metrics_operationalCertificateStartKESPeriod_int, //PERIODO KES CREACION CERTIFICADO
+        cardano_node_metrics_operationalCertificateExpiryKESPeriod_int, //PERIODO KES EXPIRACION CERTIFICADO
         cardano_node_metrics_txsProcessedNum_int,  //Transacciones totales Procesadas
-        cardano_node_ChainDB_metrics_blockNum_int, // indica el numero del bloque
+        cardano_node_metrics_blockNum_int, // indica el numero del bloque
         cardano_node_metrics_Mem_resident_int, //consumo memoria = (cardano_node_metrics_Stat_rss_int*4096)/(1024*1024)
         cardano_node_metrics_txsInMempool_int, //transacciones que se estan procesando en la memoria
-        cardano_node_BlockFetchDecision_peers_connectedPeers_int, //muestra los peers conectados
+        cardano_node_metrics_connectedPeers_int, //muestra los peers conectados
         cardano_node_metrics_nodeStartTime_int,  //tiempo de actividad del nodo en time_t
         cardano_node_metrics_Forge_forged_int, //son los bloques creados
 		cardano_node_metrics_Forge_node_is_leader_int, //son los bloques asignados para crear
-		cardano_node_ChainDB_metrics_forksCreatedNum_int, //Forks creados 
+		cardano_node_metrics_forksCreatedNum_int, //Forks creados 
 		cardano_node_metrics_Forge_didnt_adopt_int, //bloques no adoptados por otros en la red
 		cardano_node_metrics_Stat_cputicks_int //los ticks de cpu
         //Falta uso de memoria y cpu y bloques minados, incluir bloques por minutos

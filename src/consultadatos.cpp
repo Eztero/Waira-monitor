@@ -217,32 +217,32 @@ bool consultadatos::actualizar_datos(const uint32_t *puerto){
             while(std::getline(ifbuff,linea)){ //Se almacena en el array datoscli
                 posicion= linea.find(" ");
                 buff=linea.substr(0,posicion);
-                if(buff=="cardano_node_ChainDB_metrics_epoch_int"){
-                    datoscli[cardano_node_ChainDB_metrics_epoch_int]=std::stoul(linea.substr(posicion,std::string::npos));
-                }else if(buff=="cardano_node_ChainDB_metrics_slotInEpoch_int"){
-                    datoscli[cardano_node_ChainDB_metrics_slotInEpoch_int]=std::stoi(linea.substr(posicion,std::string::npos));
+                if(buff=="cardano_node_metrics_epoch_int"){
+                    datoscli[cardano_node_metrics_epoch_int]=std::stoul(linea.substr(posicion,std::string::npos));
+                }else if(buff=="cardano_node_metrics_slotInEpoch_int"){
+                    datoscli[cardano_node_metrics_slotInEpoch_int]=std::stoi(linea.substr(posicion,std::string::npos));
                     
-                }else if(buff=="cardano_node_ChainDB_metrics_slotNum_int"){
-                    datoscli[cardano_node_ChainDB_metrics_slotNum_int]=std::stoul(linea.substr(posicion,std::string::npos));
+                }else if(buff=="cardano_node_metrics_slotNum_int"){
+                    datoscli[cardano_node_metrics_slotNum_int]=std::stoul(linea.substr(posicion,std::string::npos));
                     
-                }else if(buff=="cardano_node_Forge_metrics_currentKESPeriod_int"){
-                    datoscli[cardano_node_Forge_metrics_currentKESPeriod_int]=std::stoul(linea.substr(posicion,std::string::npos));
+                }else if(buff=="cardano_node_metrics_currentKESPeriod_int"){
+                    datoscli[cardano_node_metrics_currentKESPeriod_int]=std::stoul(linea.substr(posicion,std::string::npos));
                     
                 }
-                else if(buff=="cardano_node_Forge_metrics_remainingKESPeriods_int"){
-                    datoscli[cardano_node_Forge_metrics_remainingKESPeriods_int]=std::stoi(linea.substr(posicion,std::string::npos));
+                else if(buff=="cardano_node_metrics_remainingKESPeriods_int"){
+                    datoscli[cardano_node_metrics_remainingKESPeriods_int]=std::stoi(linea.substr(posicion,std::string::npos));
                 }
-                else if(buff=="cardano_node_Forge_metrics_operationalCertificateStartKESPeriod_int"){
-                    datoscli[cardano_node_Forge_metrics_operationalCertificateStartKESPeriod_int]=std::stoul(linea.substr(posicion,std::string::npos));
+                else if(buff=="cardano_node_metrics_operationalCertificateStartKESPeriod_int"){
+                    datoscli[cardano_node_metrics_operationalCertificateStartKESPeriod_int]=std::stoul(linea.substr(posicion,std::string::npos));
                 }
-                else if(buff=="cardano_node_Forge_metrics_operationalCertificateExpiryKESPeriod_int"){
-                    datoscli[cardano_node_Forge_metrics_operationalCertificateExpiryKESPeriod_int]=std::stoul(linea.substr(posicion,std::string::npos));
+                else if(buff=="cardano_node_metrics_operationalCertificateExpiryKESPeriod_int"){
+                    datoscli[cardano_node_metrics_operationalCertificateExpiryKESPeriod_int]=std::stoul(linea.substr(posicion,std::string::npos));
                 }
                 else if(buff=="cardano_node_metrics_txsProcessedNum_int"){
                     datoscli[cardano_node_metrics_txsProcessedNum_int]=std::stoul(linea.substr(posicion,std::string::npos));
                 }
-                else if(buff=="cardano_node_ChainDB_metrics_blockNum_int"){
-                    datoscli[cardano_node_ChainDB_metrics_blockNum_int]=std::stoul(linea.substr(posicion,std::string::npos));
+                else if(buff=="cardano_node_metrics_blockNum_int"){
+                    datoscli[cardano_node_metrics_blockNum_int]=std::stoul(linea.substr(posicion,std::string::npos));
                 }
                 else if(buff=="cardano_node_metrics_Mem_resident_int"){
                     datoscli[cardano_node_metrics_Mem_resident_int]=std::stoul(linea.substr(posicion,std::string::npos));
@@ -250,12 +250,12 @@ bool consultadatos::actualizar_datos(const uint32_t *puerto){
                 else if(buff=="cardano_node_metrics_txsInMempool_int"){
                     datoscli[cardano_node_metrics_txsInMempool_int]=std::stoi(linea.substr(posicion,std::string::npos));
                 }
-                else if(buff=="cardano_node_ChainDB_metrics_density_real"){
+                else if(buff=="cardano_node_metrics_density_real"){
                     density=std::stof(linea.substr(posicion,8));
                     density_str=linea.substr(posicion,8);
                 }
-                else if(buff=="cardano_node_BlockFetchDecision_peers_connectedPeers_int"){
-                    datoscli[cardano_node_BlockFetchDecision_peers_connectedPeers_int]=std::stoi(linea.substr(posicion,std::string::npos));
+                else if(buff=="cardano_node_metrics_connectedPeers_int"){
+                    datoscli[cardano_node_metrics_connectedPeers_int]=std::stoi(linea.substr(posicion,std::string::npos));
                 }
                 else if(buff=="cardano_node_metrics_nodeStartTime_int"){
                     datoscli[cardano_node_metrics_nodeStartTime_int]=std::stoull(linea.substr(posicion,std::string::npos));
@@ -310,31 +310,31 @@ bool consultadatos::version_nodo(std::string *nversion){
 }
 
 uint32_t consultadatos::epoca(){
-    return datoscli[cardano_node_ChainDB_metrics_epoch_int];
+    return datoscli[cardano_node_metrics_epoch_int];
 }
 
 uint32_t consultadatos::slot_epoca(){
-    return datoscli[cardano_node_ChainDB_metrics_slotInEpoch_int];
+    return datoscli[cardano_node_metrics_slotInEpoch_int];
 }
 
 uint64_t consultadatos::totalslot(){
-    return datoscli[cardano_node_ChainDB_metrics_slotNum_int];
+    return datoscli[cardano_node_metrics_slotNum_int];
 }
 
 uint32_t consultadatos::kes_actual(){
-    return datoscli[cardano_node_Forge_metrics_currentKESPeriod_int];
+    return datoscli[cardano_node_metrics_currentKESPeriod_int];
 }
 
 uint32_t consultadatos::kes_restante(){
-    return datoscli[cardano_node_Forge_metrics_remainingKESPeriods_int];
+    return datoscli[cardano_node_metrics_remainingKESPeriods_int];
 }
 
 uint32_t consultadatos::kes_certificado(){
-    return datoscli[cardano_node_Forge_metrics_operationalCertificateStartKESPeriod_int];
+    return datoscli[cardano_node_metrics_operationalCertificateStartKESPeriod_int];
 }
 
 uint32_t consultadatos::kes_termino_certificado(){
-    return datoscli[cardano_node_Forge_metrics_operationalCertificateExpiryKESPeriod_int];
+    return datoscli[cardano_node_metrics_operationalCertificateExpiryKESPeriod_int];
 }
 
 uint16_t consultadatos::ticks_porciento(){
@@ -391,7 +391,7 @@ uint32_t consultadatos::transacciones_mempool(){
 }
 
 uint64_t consultadatos::numero_bloque(){
-	return datoscli[cardano_node_ChainDB_metrics_blockNum_int];
+	return datoscli[cardano_node_metrics_blockNum_int];
 	}
 	
 uint64_t consultadatos::uptimens(){
@@ -421,11 +421,11 @@ std::string consultadatos::reward(){
 	}
 
 uint16_t consultadatos::peers(){
-    return datoscli[cardano_node_BlockFetchDecision_peers_connectedPeers_int];
+    return datoscli[cardano_node_metrics_connectedPeers_int];
 }
 
 uint32_t consultadatos::forks(){
-	return datoscli[cardano_node_ChainDB_metrics_forksCreatedNum_int];
+	return datoscli[cardano_node_metrics_forksCreatedNum_int];
 	}
 
 uint32_t consultadatos::bloques_creados(){
@@ -553,7 +553,7 @@ bool consultadatos::cargar_configuracion(ngui *ventana, const double ventanapos_
 
 uint32_t consultadatos::dias_restante_kes(){  //calcula los dias que faltan para renovar el certificado
     uint32_t diasfaltantes;
-    diasfaltantes=datoscli[cardano_node_Forge_metrics_remainingKESPeriods_int]*SLOTSPERKESPERIOD; //convierte a slots
+    diasfaltantes=datoscli[cardano_node_metrics_remainingKESPeriods_int]*SLOTSPERKESPERIOD; //convierte a slots
     diasfaltantes=diasfaltantes/86400; // dias faltantes
     return diasfaltantes;
 }
