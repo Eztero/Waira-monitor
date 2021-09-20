@@ -8,7 +8,7 @@
 #include <curl/curl.h>
 #include "json.hpp"
 #include "ngui.h"
-#include <iomanip> 
+#include <iomanip>
 #include <unistd.h>
 #define TAMANO_ARRAY_DATOS 18
 #define SLOTSPERKESPERIOD 129600
@@ -51,15 +51,15 @@ class consultadatos{
 	std::string densidad_str();
 	std::string reward();
 	std::string version();  //devuelve la version
-	std::string poolnamew(); 
-	
+	std::string poolnamew();
+
 	bool cargar_configuracion(ngui *ventana, const double ventanapos_xyanchoalto[]); //carga los datos dentro de la ventana creada
-	bool github(std::string *nversion, std::string *estado); //consulta el repo de github cardano-node por la version y el estado 
+	bool github(std::string *nversion, std::string *estado); //consulta el repo de github cardano-node por la version y el estado
 	bool version_nodo(std::string *nversion);
 	bool github_habilitado();
 	bool adapools_habilitado();
-	
-	private:   
+
+	private:
 	float saturated, density;
 	std::istringstream isbuffer;
 	std::string exec(std::string command);
@@ -81,20 +81,20 @@ class consultadatos{
         cardano_node_metrics_nodeStartTime_int,  //tiempo de actividad del nodo en time_t
         cardano_node_metrics_Forge_forged_int, //son los bloques creados
 		cardano_node_metrics_Forge_node_is_leader_int, //son los bloques asignados para crear
-		cardano_node_metrics_forksCreatedNum_int, //Forks creados 
+		cardano_node_metrics_forksCreatedNum_int, //Forks creados
 		cardano_node_metrics_Forge_didnt_adopt_int, //bloques no adoptados por otros en la red
 		cardano_node_metrics_Stat_cputicks_int //los ticks de cpu
         //Falta uso de memoria y cpu y bloques minados, incluir bloques por minutos
-        
+
     };
-    uint64_t datoscli[TAMANO_ARRAY_DATOS], uint64buff,reward_balance;
+    uint64_t datoscli[TAMANO_ARRAY_DATOS], uint64buff,reward_balance,active_stake;
     uint32_t uint32buff,ticks_a,ticks_b;
 	uint16_t posicion,port_node,cantidad_ip_in=0;
 	bool haypuertorelay, haypuertonode, enable_github,enable_adapools;
-    std::string linea,buff,respuesta_url,ip_in[100],puerto_in[100],ips_out[100],puertos_out[100],poolname,url_cardanonode,pool_id,active_stake,total_stake,pledged,delegators,buff_error, density_str;
+    std::string linea,buff,respuesta_url,ip_in[100],puerto_in[100],ips_out[100],puertos_out[100],poolname,url_cardanonode,pool_id,total_stake,pledged,delegators,buff_error, density_str;
     CURL *curl;                        //parametros de configiracion curl
-    CURLcode res; 
-	
+    CURLcode res;
+
 	};
 
 #endif
