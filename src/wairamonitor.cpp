@@ -14,7 +14,7 @@ GPL-3.0 License
 #include <unistd.h>
 #include <csignal>
 #include "lectura_red.h"
-#define VERSION_WAIRA "wairamonitor 0.5"
+#define VERSION_WAIRA "wairamonitor 0.6"
 
 void categorizar_ips(std::string puertos_abiertos[], uint16_t *index_puertosabiertos,std::string ip_p2p[][2], uint16_t *index_ip_p2p,std::string ip_huerfana_salida[][2], uint16_t *index_ip_huerfana_salida,std::string ip_huerfana_entrada[][2], uint16_t *index_ip_huerfana_entrada);
 void salidaforzosa(int a);
