@@ -274,6 +274,9 @@ bool consultadatos::actualizar_datos(const uint32_t *puerto){
                 else if(buff=="cardano_node_metrics_Forge_didnt_adopt_int"){
                     datoscli[cardano_node_metrics_Forge_didnt_adopt_int]=std::stoi(linea.substr(posicion,std::string::npos));
                 }
+                else if(buff=="cardano_node_metrics_forks_int"){
+                    datoscli[cardano_node_metrics_forks_int]=std::stoi(linea.substr(posicion,std::string::npos));
+                }
 
             }
         }
@@ -425,7 +428,7 @@ uint16_t consultadatos::peers(){
 }
 
 uint32_t consultadatos::forks(){
-	return datoscli[cardano_node_metrics_forksCreatedNum_int];
+	return datoscli[cardano_node_metrics_forks_int];
 	}
 
 uint32_t consultadatos::bloques_creados(){

@@ -81,7 +81,7 @@ class consultadatos{
         cardano_node_metrics_nodeStartTime_int,  //tiempo de actividad del nodo en time_t
         cardano_node_metrics_Forge_forged_int, //son los bloques creados
 		cardano_node_metrics_Forge_node_is_leader_int, //son los bloques asignados para crear
-		cardano_node_metrics_forksCreatedNum_int, //Forks creados
+		cardano_node_metrics_forks_int, //Forks creados
 		cardano_node_metrics_Forge_didnt_adopt_int, //bloques no adoptados por otros en la red
 		cardano_node_metrics_Stat_cputicks_int //los ticks de cpu
         //Falta uso de memoria y cpu y bloques minados, incluir bloques por minutos
