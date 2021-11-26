@@ -250,6 +250,9 @@ bool consultadatos::actualizar_datos(const uint32_t *puerto){
                 else if(buff=="cardano_node_metrics_txsInMempool_int"){
                     datoscli[cardano_node_metrics_txsInMempool_int]=std::stoi(linea.substr(posicion,std::string::npos));
                 }
+                else if(buff=="cardano_node_metrics_mempoolBytes_int"){
+                    datoscli[cardano_node_metrics_mempoolBytes_int]=std::stoi(linea.substr(posicion,std::string::npos));
+                }
                 else if(buff=="cardano_node_metrics_density_real"){
                     density=std::stof(linea.substr(posicion,8));
                     density_str=linea.substr(posicion,8);
@@ -271,8 +274,8 @@ bool consultadatos::actualizar_datos(const uint32_t *puerto){
                 else if(buff=="cardano_node_metrics_Forge_node_is_leader_int"){
                     datoscli[cardano_node_metrics_Forge_node_is_leader_int]=std::stoi(linea.substr(posicion,std::string::npos));
                 }
-                else if(buff=="cardano_node_metrics_Forge_didnt_adopt_int"){
-                    datoscli[cardano_node_metrics_Forge_didnt_adopt_int]=std::stoi(linea.substr(posicion,std::string::npos));
+                else if(buff=="cardano_node_metrics_Forge_adopted_int"){
+                    datoscli[cardano_node_metrics_Forge_adopted_int]=std::stoi(linea.substr(posicion,std::string::npos));
                 }
                 else if(buff=="cardano_node_metrics_forks_int"){
                     datoscli[cardano_node_metrics_forks_int]=std::stoi(linea.substr(posicion,std::string::npos));
@@ -393,6 +396,11 @@ uint32_t consultadatos::transacciones_mempool(){
     return datoscli[cardano_node_metrics_txsInMempool_int];
 }
 
+uint32_t consultadatos::kbytes_mempool(){
+uint32buff=datoscli[cardano_node_metrics_mempoolBytes_int]/1024;
+return uint32buff;
+}
+
 uint64_t consultadatos::numero_bloque(){
 	return datoscli[cardano_node_metrics_blockNum_int];
 	}
@@ -440,7 +448,8 @@ uint32_t consultadatos::bloques_asignados(){
 	}
 
 uint32_t consultadatos::bloques_perdidos(){
-	return datoscli[cardano_node_metrics_Forge_didnt_adopt_int];
+    uint32buff= datoscli[cardano_node_metrics_Forge_forged_int] - datoscli[cardano_node_metrics_Forge_adopted_int];
+	return uint32buff;
 	}
 
 std::string consultadatos::exec(std::string command) {
