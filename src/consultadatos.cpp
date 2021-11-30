@@ -8,6 +8,7 @@ consultadatos::consultadatos(){
     delegators="0";
     density=0;
     density_str="0";
+    blockdelay_s="0";
     url_cardanonode="";
     reward_balance=0;
     pool_id="";
@@ -162,13 +163,15 @@ bool consultadatos::github(std::string *nversion, std::string *estado){
                         *estado="release";
                     }
                 }else{
-                    *nversion="Not found tag";
+                    *nversion="No tag";
+                    *estado="error";
                     curl_easy_cleanup(curl);
                     curl_global_cleanup(); // se borra todo y se cierra el curl
                     return false;
                 }
             }else{
 				*nversion="\"No json\"";
+				*estado="error";
 				}
         }
         else{
@@ -214,7 +217,7 @@ bool consultadatos::actualizar_datos(const uint32_t *puerto){
             //std::istringstream ifbuff=std::istringstream(std::string((std::istreambuf_iterator<char>(ifs)),(std::istreambuf_iterator<char>())));
             //ifs.close();
 
-            while(std::getline(ifbuff,linea)){ //Se almacena en el array datoscli
+            while(std::getline(ifbuff,linea)){ //Se almacena en el array datoscli[]
                 posicion= linea.find(" ");
                 buff=linea.substr(0,posicion);
                 if(buff=="cardano_node_metrics_epoch_int"){
@@ -227,7 +230,6 @@ bool consultadatos::actualizar_datos(const uint32_t *puerto){
 
                 }else if(buff=="cardano_node_metrics_currentKESPeriod_int"){
                     datoscli[cardano_node_metrics_currentKESPeriod_int]=std::stoul(linea.substr(posicion,std::string::npos));
-
                 }
                 else if(buff=="cardano_node_metrics_remainingKESPeriods_int"){
                     datoscli[cardano_node_metrics_remainingKESPeriods_int]=std::stoi(linea.substr(posicion,std::string::npos));
@@ -254,7 +256,7 @@ bool consultadatos::actualizar_datos(const uint32_t *puerto){
                     datoscli[cardano_node_metrics_mempoolBytes_int]=std::stoi(linea.substr(posicion,std::string::npos));
                 }
                 else if(buff=="cardano_node_metrics_density_real"){
-                    density=std::stof(linea.substr(posicion,8));
+                    //density=std::stof(linea.substr(posicion,8));
                     density_str=linea.substr(posicion,8);
                 }
                 else if(buff=="cardano_node_metrics_connectedPeers_int"){
@@ -280,6 +282,18 @@ bool consultadatos::actualizar_datos(const uint32_t *puerto){
                 else if(buff=="cardano_node_metrics_forks_int"){
                     datoscli[cardano_node_metrics_forks_int]=std::stoi(linea.substr(posicion,std::string::npos));
                 }
+                else if(buff=="cardano_node_metrics_slotsMissedNum_int"){
+                    datoscli[cardano_node_metrics_slotsMissedNum_int]=std::stoi(linea.substr(posicion,std::string::npos));
+                }
+                else if(buff=="cardano_node_metrics_Stat_threads_int"){
+                    datoscli[cardano_node_metrics_Stat_threads_int]=std::stoi(linea.substr(posicion,std::string::npos));
+                }
+                else if(buff=="cardano_node_metrics_blockfetchclient_blockdelay_s"){
+                    blockdelay_s=linea.substr(posicion,5); //Este dejarlo como string
+                }
+                else if(buff=="cardano_node_metrics_blockfetchclient_blocksize"){
+                    datoscli[cardano_node_metrics_blockfetchclient_blocksize]=std::stoi(linea.substr(posicion,std::string::npos));
+                }
 
             }
         }
@@ -287,6 +301,10 @@ bool consultadatos::actualizar_datos(const uint32_t *puerto){
     curl_easy_cleanup(curl); // se borra todo y se cierra el curl
     curl_global_cleanup(); // se borra todo y se cierra el curl
     return true;
+}
+
+uint16_t consultadatos::slot_perdidos(){
+return datoscli[cardano_node_metrics_slotsMissedNum_int];
 }
 
 bool consultadatos::version_nodo(std::string *nversion){
@@ -313,6 +331,17 @@ bool consultadatos::version_nodo(std::string *nversion){
     linea=linea.substr(0,t);
     *nversion=linea;
     return true;
+}
+
+float consultadatos::mempool_kbytes(){
+float kb =datoscli[cardano_node_metrics_mempoolBytes_int]/1024;
+uint16_t a= kb*100;
+kb=a*0.01;
+return a;
+}
+
+uint16_t consultadatos::hilos_nodo(){
+return datoscli[cardano_node_metrics_Stat_threads_int];
 }
 
 uint32_t consultadatos::epoca(){
@@ -396,11 +425,6 @@ uint32_t consultadatos::transacciones_mempool(){
     return datoscli[cardano_node_metrics_txsInMempool_int];
 }
 
-uint32_t consultadatos::kbytes_mempool(){
-uint32buff=datoscli[cardano_node_metrics_mempoolBytes_int]/1024;
-return uint32buff;
-}
-
 uint64_t consultadatos::numero_bloque(){
 	return datoscli[cardano_node_metrics_blockNum_int];
 	}
@@ -416,11 +440,11 @@ uint64_t consultadatos::uptimens(){
 	return segundos;
 }
 
-float consultadatos::densidad(){
-    uint16_t a=(density*100);
-    float b=a*0.01;
-    return b;
-}
+//float consultadatos::densidad(){
+//   uint16_t a=(density*100);
+//    float b=a*0.01;
+//    return b;
+//}
 
 std::string consultadatos::densidad_str(){
     return density_str;
@@ -451,6 +475,16 @@ uint32_t consultadatos::bloques_perdidos(){
     uint32buff= datoscli[cardano_node_metrics_Forge_forged_int] - datoscli[cardano_node_metrics_Forge_adopted_int];
 	return uint32buff;
 	}
+
+float consultadatos::bloque_kbytes(){
+float kb =datoscli[cardano_node_metrics_blockfetchclient_blocksize];
+kb=kb/1024;
+return kb;
+}
+
+std::string consultadatos::bloque_delay(){
+return blockdelay_s;
+}
 
 std::string consultadatos::exec(std::string command) {
     char *buffer = new char[490];

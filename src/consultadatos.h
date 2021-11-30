@@ -10,7 +10,7 @@
 #include "ngui.h"
 #include <iomanip>
 #include <unistd.h>
-#define TAMANO_ARRAY_DATOS 18
+#define TAMANO_ARRAY_DATOS 22
 #define SLOTSPERKESPERIOD 129600
 #define EPOCHLENGTH 432000    //cada slot demora 1 segundo
 #define TIEMPO_ENTRECONSULTAS 1
@@ -38,7 +38,6 @@ class consultadatos{
 	uint32_t memoria();
 	uint64_t transacciones_procesadas();
 	uint32_t transacciones_mempool();
-	uint32_t kbytes_mempool();
 	uint16_t peers();
 	uint32_t dias_restante_kes();
 	uint64_t numero_bloque();
@@ -48,7 +47,12 @@ class consultadatos{
 	uint32_t bloques_asignados();
 	uint32_t bloques_perdidos();
 	uint16_t ticks_porciento();
-	float densidad();
+	uint16_t hilos_nodo();
+	uint16_t slot_perdidos();
+	float mempool_kbytes();
+	float bloque_kbytes();
+	std::string bloque_delay();
+	//float densidad();
 	std::string densidad_str();
 	std::string reward();
 	std::string version();  //devuelve la version
@@ -66,7 +70,7 @@ class consultadatos{
 	std::string exec(std::string command);
 	void clean_array(uint64_t datoscli[]);
 	static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
-    enum estadistica{  //actualmente tiene 18 No olvidar editar TAMANO_ARRAY_DATOS
+    enum estadistica{  //actualmente tiene 22 No olvidar editar TAMANO_ARRAY_DATOS
         cardano_node_metrics_epoch_int,  //EPOCA
         cardano_node_metrics_slotInEpoch_int, //SLOT
         cardano_node_metrics_slotNum_int, //TOTAL SLOTS
@@ -78,22 +82,25 @@ class consultadatos{
         cardano_node_metrics_blockNum_int, // indica el numero del bloque
         cardano_node_metrics_Mem_resident_int, //consumo memoria = (cardano_node_metrics_Stat_rss_int*4096)/(1024*1024)
         cardano_node_metrics_txsInMempool_int, //transacciones que se estan procesando en la mempool
-        cardano_node_metrics_mempoolBytes_int, //los bytes que se estan procesando en la mempool
         cardano_node_metrics_connectedPeers_int, //muestra los peers conectados
         cardano_node_metrics_nodeStartTime_int,  //tiempo de actividad del nodo en time_t
         cardano_node_metrics_Forge_forged_int, //son los bloques creados
 		cardano_node_metrics_Forge_node_is_leader_int, //son los bloques asignados para crear
 		cardano_node_metrics_forks_int, //Forks creados
 		cardano_node_metrics_Forge_adopted_int, //bloques adoptados por otros en la red
-		cardano_node_metrics_Stat_cputicks_int //los ticks de cpu
-        //Falta bloques minados, incluir bloques por minutos
+		cardano_node_metrics_Stat_cputicks_int, //los ticks de cpu
+		cardano_node_metrics_slotsMissedNum_int, //cantidad de slots perdidos (1slots=1seg)
+		cardano_node_metrics_Stat_threads_int, // cantidad de hilos en paralelo que se estan ejecutando el cardano node
+		cardano_node_metrics_mempoolBytes_int,  //los bytes que se estan procesando en la mempool
+		cardano_node_metrics_blockfetchclient_blocksize //Tamaño del bloque en bytes
+		        //Falta bloques minados, incluir bloques por minutos
 
     };
     uint64_t datoscli[TAMANO_ARRAY_DATOS], uint64buff,reward_balance,active_stake;
     uint32_t uint32buff,ticks_a,ticks_b;
 	uint16_t posicion,port_node,cantidad_ip_in=0;
 	bool haypuertorelay, haypuertonode, enable_github,enable_adapools;
-    std::string linea,buff,respuesta_url,ip_in[100],puerto_in[100],ips_out[100],puertos_out[100],poolname,url_cardanonode,pool_id,total_stake,pledged,delegators,buff_error, density_str;
+    std::string linea,buff,respuesta_url,ip_in[100],puerto_in[100],ips_out[100],puertos_out[100],poolname,url_cardanonode,pool_id,total_stake,pledged,delegators,buff_error,density_str,blockdelay_s;
     CURL *curl;                        //parametros de configiracion curl
     CURLcode res;
 	};

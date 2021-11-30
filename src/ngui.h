@@ -42,7 +42,7 @@ if (key == KEY_RESIZE) {}
 
  */
 class ngui{
-	
+
 	public:
 	ngui(uint8_t enable_cursor);
 	~ngui();
@@ -61,16 +61,16 @@ class ngui{
     void label_uint32(uint32_t x,uint32_t y,const uint32_t s);
     void label_uint16(uint32_t x,uint32_t y,const uint16_t s);
     void label(uint32_t x,uint32_t y,const char *texto,const char *s);
-    void label(uint32_t x,uint32_t y,const char *texto,uint atributo);
+    void label(uint32_t x,uint32_t y,const char *texto,uint atributo); //el atributo puede ser COLOR_PAIR(index_paleta_color) | A_BOLD | A_BLINK
     void paleta_color(short index,short color_letra, short color_fondo);
     void ventana_terminal_xy(int *x,int *y);
     void posicion_cursor(int *x, int *y);
 	void crear_linea_horizontal(uint32_t x,uint32_t y,uint32_t ancho,char caracter);
 	void refrescar(); //imprime los caracteres en la ventana
-	
+
 	private:
-	
-	
-	
+
+
+
 	};
 #endif
