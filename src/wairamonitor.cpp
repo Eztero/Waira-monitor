@@ -859,14 +859,19 @@ void cargar_ui(){
                         ventana->crear_linea_horizontal(ventana_tagversion[2]*0.3,ventana_tagversion[1]+3,espacios[esp_local_nodo_version],' ');
                         ventana->label(ventana_tagversion[2]*0.3,ventana_tagversion[1]+3,local_nodo_version.c_str());
                         espacios[esp_local_nodo_version]=local_nodo_version.length();
-                        if(local_nodo_version.length()==0 || estado == "error"){
+                        if(local_nodo_version.length()==0){
                             ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+3,"         ");
                             ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+3,"Error", COLOR_PAIR(6) | A_BOLD | A_BLINK);
                         }
                         else if(version==local_nodo_version || (version!=local_nodo_version && estado!="release")){ //la segunda condicion es para no considerar un prerelease o un draft
                             ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+3,"         ");
                             ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+3,"updated",COLOR_PAIR(4) | A_BOLD);
-                        }else{
+                            }
+                        else if(estado == "error"){ //si la consulta a github da un error y no determina el tag
+                            ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+3,"         ");
+                            ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+3,"Local",COLOR_PAIR(4) | A_BOLD);
+                        }
+                        else{
                             ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+3,"         ");
                             ventana->label(ventana_tagversion[2]*0.6,ventana_tagversion[1]+3,"outdated", COLOR_PAIR(6) | A_BOLD | A_BLINK);
                         }
