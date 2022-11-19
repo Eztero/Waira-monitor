@@ -1,4 +1,5 @@
-# Waira-monitor
+# Waira-monitor (Beta)
+## Planeo reescribir el código y ordenarlo, ya que lo estaba construyendo en partes, probablemente tenga algunos errores, pero es funcional, es el monitor que uso en mi piscina :). Lo dejaré en beta por ahora.
 
 *Modo Rele*
 ![ ](./images/monitor.jpg  "Relay mode")
