@@ -1,4 +1,5 @@
-# Waira-monitor
+# Waira-monitor (Beta)
+## I plan to rewrite the code and order it, since I was building it in parts, it probably has a few bugs, but it's still functional, it's the monitor I use in my pool :). I'll leave it in beta for now
 *Relay mode*
 ![ ](./images/monitor.jpg  "Relay mode")
 
