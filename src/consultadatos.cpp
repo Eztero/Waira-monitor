@@ -259,8 +259,8 @@ bool consultadatos::actualizar_datos(const uint32_t *puerto){
                     //density=std::stof(linea.substr(posicion,8));
                     density_str=linea.substr(posicion,8);
                 }
-                else if(buff=="cardano_node_metrics_connectedPeers_int"){
-                    datoscli[cardano_node_metrics_connectedPeers_int]=std::stoi(linea.substr(posicion,std::string::npos));
+                else if(buff=="cardano_node_metrics_peers_connectedPeers_int"){
+                    datoscli[cardano_node_metrics_peers_connectedPeers_int]=std::stoi(linea.substr(posicion,std::string::npos));
                 }
                 else if(buff=="cardano_node_metrics_nodeStartTime_int"){
                     datoscli[cardano_node_metrics_nodeStartTime_int]=std::stoull(linea.substr(posicion,std::string::npos));
@@ -456,7 +456,7 @@ std::string consultadatos::reward(){
 	}
 
 uint16_t consultadatos::peers(){
-    return datoscli[cardano_node_metrics_connectedPeers_int];
+    return datoscli[cardano_node_metrics_peers_connectedPeers_int];
 }
 
 uint32_t consultadatos::forks(){
