@@ -137,7 +137,7 @@ bool consultadatos::github(std::string *nversion, std::string *estado){
     curl = curl_easy_init();  //se inicia el curl para realizar consulta
     if(curl) {
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "curl/7.42.0");
-        curl_easy_setopt(curl, CURLOPT_URL, "https://api.github.com/repos/input-output-hk/cardano-node/releases");
+        curl_easy_setopt(curl, CURLOPT_URL, "https://api.github.com/repos/IntersectMBO/cardano-node/releases");
         curl_easy_setopt(curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0); //se agrega soporte http/2
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &respuesta_url);
